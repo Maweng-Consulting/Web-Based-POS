@@ -20,6 +20,7 @@
 
 </head>
 <body>
+  <!--
   <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
     <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">WEB POS</a>
   
@@ -41,7 +42,7 @@
   
     
   </header>
-   
+   -->
 <div class="container-fluid">
 <div class="row mt-3">
     <div class="col">
@@ -81,7 +82,7 @@
                   </td>
                   <td>{{order_item.price}}</td>
                 <td>
-                    <a href="#" class="btn btn-danger btn-sm">
+                    <a href="{% url 'remove-from-cart' order_item.id %}" class="btn btn-danger btn-sm">
                         <i class="bi bi-trash"></i>
                     </a>
                 </td>
@@ -112,13 +113,17 @@
             <form method="POST">
               {% csrf_token %}
               <p>Total Amount: 7500</p>
+              <p>Amount Paid: 7500</p>
+              <p>Balance Amount: 0</p>
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label"></label>
                 <input type="number" name="amount" id="amount" class="form-control" id="exampleFormControlInput1" placeholder="amount ...">
               </div>
               <div class="mb-3">
-                <input type="submit" class="btn btn-success">      
+                <input type="submit" class="btn btn-success" value="Complete Purchase">  
+                <a href="#" class="btn btn-warning ml-auto">Pay Later</a>    
               </div>
+
                 
             </form>
           </div>

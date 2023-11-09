@@ -20,4 +20,4 @@ class MpesaPaymentSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_button(self, obj):
-        return f'<a href="/add-to-cart/{obj.id}" class="btn btn-primary btn-sm">Pay</a>'
+        return f'<a href="/redeem-mpesa-payment/{obj.id}" class="btn btn-primary btn-sm">Pay</a>'

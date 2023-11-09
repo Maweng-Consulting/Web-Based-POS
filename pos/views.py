@@ -182,7 +182,7 @@ class InventoryAPIView(generics.ListAPIView):
     serializer_class = InventorySerializer
 
 class MpesaPaymentAPIView(generics.ListCreateAPIView):
-    queryset = MpesaPayment.objects.all()
+    queryset = MpesaPayment.objects.filter(processed=False)
     serializer_class = MpesaPaymentSerializer
 
 
@@ -217,8 +217,6 @@ def sales_point(request):
 def add_to_cart(request, item_id=None):
     item = Inventory.objects.get(id=item_id)
 
-
-
     TemporaryCustomerCartItem.objects.create(
         item=item,
         quantity=1,
@@ -227,3 +225,14 @@ def add_to_cart(request, item_id=None):
     return redirect("sales-point")
 
 
+def remove_from_cart(request, item_id=None):
+    item = TemporaryCustomerCartItem.objects.get(id=item_id)
+    item.delete()
+    return redirect("sales-point")
+
+
+def redeem_mpesa_payment(request, payment_id=None):
+    mpesa_payment = MpesaPayment.objects.get(id=payment_id)
+    mpesa_payment.processed = True
+    mpesa_payment.save()
+    return redirect("sales-point")
