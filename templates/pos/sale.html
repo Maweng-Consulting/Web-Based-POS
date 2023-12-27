@@ -138,7 +138,7 @@ const BASE_URL = "http://127.0.0.1:8000"
   
 async function fetchData() {
     try {
-        const response = await fetch(`${BASE_URL}/inventories/`);
+        const response = await fetch(`${BASE_URL}/pos/inventories/`);
 
         if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -155,7 +155,7 @@ async function fetchData() {
 
 async function fetchMpesaPayments() {
     try {
-        const response = await fetch(`${BASE_URL}/mpesa-payments/`);
+        const response = await fetch(`${BASE_URL}/pos/mpesa-payments/`);
 
         if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -221,6 +221,7 @@ fetchMpesaPayments();
   
 <script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script><script src="dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script>
+    <script src="{% static 'dashboard.js' %}"></script>
 </body>
 </html>
