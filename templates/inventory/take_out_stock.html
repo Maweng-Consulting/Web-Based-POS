@@ -1,0 +1,55 @@
+<div class="modal fade" id="takeOutStockModal{{stock.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-center">Take Out Stock Item</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+            <form action="{% url 'takeout-stock' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                  <p>Stock Item: <b>{{stock.name}}</b></p>
+
+                  <div class="mb-2">
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="item_id"
+                      name="item_id"
+                      value="{{stock.id}}"
+                      required
+                      hidden
+                      readonly
+                    
+                    />
+                  </div>
+              
+                  <div class="mb-2">
+                    <label for="exampleInputPassword1" class="form-label">Quantity</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="quantity"
+                      name="quantity"
+                      min="1"
+                      required
+                    />
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label">Reason</label>
+                    <select class="form-select" id="reason" name="reason">
+                        <option value="Damaged">Damaged</option>
+                        <option value="Family">For family use</option>
+                        <option value="Fashion">Out of fashion</option>
+                        <option value="Stolen">Stolen</option>
+                      </select>
+                  </div>
+                  
+                <div class="text-center mt-4">
+                  <button type="submit" class="btn btn-primary">Submit Stock</button>
+                </div>
+              </div>
+              </form>
+      </div>
+    </div>
+  </div>

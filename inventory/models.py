@@ -21,6 +21,10 @@ STOCK_ACTION_OPTIONS = (
     ("Buy", "Buy"),
     ("Sale", "Sale"),
     ("Damaged", "Damaged"),
+    ("Stolen", "Stolen"),
+    ("Family", "Family use"),
+    ("Fashion", "Out of fashion"),
+    ("New Stock", "New Stock"),
 )
 
 # Create your models here.
@@ -30,7 +34,6 @@ class Inventory(AbstractBaseModel):
     selling_price = models.DecimalField(max_digits=100, decimal_places=2)
     quantity = models.FloatField(default=0)
     unit_of_measure = models.CharField(max_length=255)
-
 
 
     def __str__(self):
