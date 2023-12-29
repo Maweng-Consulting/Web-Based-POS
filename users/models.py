@@ -7,8 +7,9 @@ from django.utils.translation import gettext_lazy as _
 ROLE_CHOICES = (
     ("admin", "Admin"),
     ("cashier", "Cashier"),
-    ("chef", "Chef"),
-    ("student", "Student"),
+    ("agent", "Agent"),
+    ("broker", "Broker"),
+    ("Supplier", "Supplier"),
 )
 
 class User(AbstractUser):
@@ -18,7 +19,14 @@ class User(AbstractUser):
     gender = models.CharField(max_length=255, null=True)
 
     def __str__(self):
-        return self.username
+        if self.first_name and self.last_name:
+            return f"{self.first_name} {self.last_name}"
+        else: 
+            return self.username
+            
 
     def name(self):
-        return f"{self.first_name} {self.last_name}"
+        if not self.first_name and self.last_name:
+            return self.username
+        else: 
+            return f"{self.first_name} {self.last_name}"

@@ -9,6 +9,14 @@
                 {% csrf_token %}
                 <div class="modal-body">
                   <p>Stock Item: <b>{{stock.name}}</b></p>
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Supplier</label>
+                    <select class="form-select" id="supplier_id" name="supplier_id">
+                      {% for supplier in suppliers %}
+                        <option value="{{supplier.id}}">{{supplier.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
 
                   <div class="mb-2">
                     <input
@@ -23,7 +31,7 @@
                     />
                   </div>
               
-                  <div class="mb-2">
+                  <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">Quantity</label>
                     <input
                       type="number"

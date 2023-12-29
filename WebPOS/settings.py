@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     "pos",
     "inventory",
     "users",
+    "suppliers",
+    "payments",
 
     'table',
 ]

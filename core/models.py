@@ -9,3 +9,8 @@ class AbstractBaseModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+class PlatformLog(AbstractBaseModel):
+    actioned_by = models.ForeignKey("users.User", on_delete=models.SET_NULL, null=True)
+    action = models.JSONField(default=list)

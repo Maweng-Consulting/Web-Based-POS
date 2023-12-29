@@ -221,30 +221,20 @@
     
   </ul>
   
-  <a href="#" class="btn btn-danger btn-sm">Logout</a>
- 
-  
+
 </header>
+
 
 <div class="container-fluid">
   <div class="row">
     {% include "includes/sidebar.html" %}
 
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2"></h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group me-2">
-  
-          </div>
-          
-        </div>
-      </div>
-
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
       {% block content %}
       {% endblock content %}
       {% include "inventory/new_stock_item.html" %}
       {% include "accounts/new_staff.html" %}
+      {% include "suppliers/new_supplier.html" %}
       
   </main>
   </div>
