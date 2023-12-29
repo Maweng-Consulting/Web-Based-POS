@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <h3>Supplier Details</h3>
+    <hr/>
+    <div class="col">
+        <p>Name: {{supplier.name}}</p>
+        <p>Phone Number: {{supplier.phone_number}}</p>
+    </div>
+    <div class="col">
+        <p>Email: {{supplier.email}}</p>
+        <p>Address: {{supplier.address}}, {{supplier.city}}-{{supplier.country}}</p>
+    </div>
+    <div class="col">
+        <p>Amount Paid: {{supplier.total_paid}}</p>
+        <p>Amount Owed: {{supplier.amount_owed}}</p>
+
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col">
+        <h3>Items Supplied</h3>
+    </div>
+    <div class="col">
+        <h3>Total Supplies Cost: {{supplier.total_supplies_cost}}</h3>
+    </div>
+</div>
+
+<hr/>
+      <div class="table-responsive small">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Supply Name</th>
+              <th scope="col">Quantity Supplied</th>
+              <th scope="col">Unit Price</th>
+              <th scope="col">Total Cost</th>
+              <th scope="col">Payment Method</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for stock in page_obj %}
+            <tr>
+              <td>{{stock.id}}</td>
+              <td>{{stock.item}}</td>
+              <td>{{stock.quantity_supplied}} {{stock.supply_unit}}</td>
+              <td>{{stock.unit_price}}</td>
+              <td>{{stock.total_cost}}</td>
+              <td>{{stock.payment_method}}</td>
+            </tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+        <div>
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+              {% if page_obj.has_previous %}   
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+              {% endif %}
+              <a class="page-link" href="#">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a>
+              {% if page_obj.has_next %}    
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+              {% endif %}   
+            </ul>
+          </nav>
+        </div>
+      </div>
+{% endblock content %}

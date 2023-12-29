@@ -1,0 +1,61 @@
+<div class="modal fade" id="newInvoiceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-center">New Invoice</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+            <form action="{% url 'new-invoice' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                  
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">Supplier</label>
+                  <select class="form-select" id="supplier_id" name="supplier_id">
+                    {% for supplier in suppliers %}
+                        <option value="{{supplier.id}}">{{supplier.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+            
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Amount Expected</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="amount_expected"
+                      name="amount_expected"
+                      min="0"
+                      required
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Date Supplied</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="date_supplied"
+                      name="date_supplied"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Date Due</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="date_due"
+                      name="date_due"
+                      required
+                    />
+                  </div>
+                  
+                <div class="text-center mt-2">
+                  <button type="submit" class="btn btn-primary">Submit Invoice</button>
+                </div>
+              </div>
+              </form>
+      </div>
+    </div>
+  </div>

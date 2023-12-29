@@ -1,0 +1,50 @@
+<div class="modal fade" id="payInvoiceModal{{invoice.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-center">Pay Invoice</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+            <form action="{% url 'pay-invoice' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                  <p><b>Supplier:</b> {{invoice.supplier}}</p>
+                  <p><b>Total Amount:</b> {{invoice.amount_expected}}</p>
+                  <p><b>Amount Paid:</b> {{invoice.amount_paid}}</p>
+                  <p><b>Balance Amount:</b> {{invoice.invoice_balance}}</p>
+                <hr>
+                    <div class="mb-2">
+                        
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="invoice_id"
+                          name="invoice_id"
+                          min="0"
+                          value="{{invoice.id}}"
+                          hidden
+                          required
+                        />
+                      </div>
+                  
+                  <div class="mb-2">
+                    <label for="exampleInputPassword1" class="form-label">Amount To Pay</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="amount"
+                      name="amount"
+                      min="0"
+                      required
+                      
+                    />
+                  </div>
+                  
+                <div class="text-center mt-2">
+                  <button type="submit" class="btn btn-primary">Pay Invoice</button>
+                </div>
+              </div>
+              </form>
+      </div>
+    </div>
+  </div>
