@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import Q
@@ -8,18 +9,19 @@ from users.models import User
 
 
 # Create your views here.
+@login_required(login_url="/users/login/")
 def suppliers(request):
-    suppliers = Supplier.objects.all()
+    suppliers = Supplier.objects.all().order_by("-created")
 
     if request.method == "POST":
         search_text = request.POST.get("search_text")
         suppliers = Supplier.objects.filter(
-            Q(name__icontains=search_text) | 
-            Q(user__first_name__icontains=search_text) | 
+            Q(name__icontains=search_text) |
+            Q(user__first_name__icontains=search_text) |
             Q(user__last_name__icontains=search_text) |
             Q(city__icontains=search_text) |
             Q(country__icontains=search_text)
-        )
+        ).order_by("-created")
 
     paginator = Paginator(suppliers, 10)
     page_number = request.GET.get("page")
@@ -31,6 +33,8 @@ def suppliers(request):
     }
     return render(request, "suppliers/suppliers.html", context)
 
+
+@login_required(login_url="/users/login/")
 @transaction.atomic
 def new_supplier(request):
     if request.method == "POST":
@@ -75,10 +79,10 @@ def new_supplier(request):
         )
         return redirect("suppliers")
 
-
     return render(request, "suppliers/new_supplier.html")
 
 
+@login_required(login_url="/users/login/")
 @transaction.atomic
 def edit_supplier(request):
     if request.method == "POST":
@@ -102,44 +106,45 @@ def edit_supplier(request):
         supplier = Supplier.objects.get(id=supplier_id)
 
         user = User.objects.get(id=supplier.user.id)
-        user.first_name=first_name
-        user.last_name=last_name
-        user.username=username
-        user.email=email
-        user.role="Supplier"
-        user.gender=gender
-        user.phone_number=phone_number
-        user.id_number=id_number
+        user.first_name = first_name
+        user.last_name = last_name
+        user.username = username
+        user.email = email
+        user.role = "Supplier"
+        user.gender = gender
+        user.phone_number = phone_number
+        user.id_number = id_number
         user.save()
         user.set_password(id_number)
         user.save()
 
-        supplier.user=user
-        supplier.name=name
-        supplier.phone_number=supplier_phone
-        supplier.email=supplier_email
-        supplier.supplies=supplies
-        supplier.address=address
-        supplier.city=city
-        supplier.country=country
+        supplier.user = user
+        supplier.name = name
+        supplier.phone_number = supplier_phone
+        supplier.email = supplier_email
+        supplier.supplies = supplies
+        supplier.address = address
+        supplier.city = city
+        supplier.country = country
         supplier.save()
-        
-        return redirect("suppliers")
 
+        return redirect("suppliers")
 
     return render(request, "suppliers/new_supplier.html")
 
 
+@login_required(login_url="/users/login/")
 def delete_supplier(request):
     if request.method == "POST":
         supplier_id = request.POST.get("supplier_id")
         supplier = Supplier.objects.get(id=supplier_id)
         supplier.delete()
         return redirect("suppliers")
-    
+
     return render(request, "suppliers/delete_supplier.html")
 
 
+@login_required(login_url="/users/login/")
 def supplier_details(request, supplier_id=None):
     supplier = Supplier.objects.get(id=supplier_id)
     context = {

@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import redirect, render
 
 from payments.models import SupplyInvoice, SupplyInvoiceLog
@@ -11,8 +12,16 @@ from suppliers.models import Supplier
 # Create your views here.
 @login_required(login_url="/users/login/")
 def invoices(request):
-    invoices = SupplyInvoice.objects.all()
+    invoices = SupplyInvoice.objects.all().order_by("-created")
     suppliers = Supplier.objects.all()
+
+    if request.method == "POST":
+        search_text = request.POST.get("search_text")
+
+        invoices = SupplyInvoice.objects.filter(
+            Q(supplier__name__icontains=search_text)
+        ).order_by("-created")
+
 
     paginator = Paginator(invoices, 12)
     page_number = request.GET.get("page")

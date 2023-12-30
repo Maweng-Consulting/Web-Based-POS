@@ -35,7 +35,7 @@ def stock_logs(request):
 
 @login_required(login_url="/users/login/")
 def inventory(request):
-    stock_items = Inventory.objects.all()
+    stock_items = Inventory.objects.all().order_by("-created")
     suppliers = Supplier.objects.all()
    
     if request.method == "POST":
