@@ -2,5 +2,8 @@ from django.contrib import admin
 
 from .models import Order, OrderItem, TemporaryCustomerCartItem
 
+
 # Register your models here.
-admin.site.register(TemporaryCustomerCartItem)
+@admin.register(TemporaryCustomerCartItem)
+class TemporaryCustomerCartItemAdmin(admin.ModelAdmin):
+    list_display = ["user", "cashier_id", "item", "quantity", "price"]

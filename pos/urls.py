@@ -1,8 +1,8 @@
 from django.urls import path
 
 from pos.views import (InventoryAPIView, MpesaPaymentAPIView, add_to_cart,
-                       get_inventory_data, redeem_mpesa_payment,
-                       remove_from_cart, sales_point)
+                       get_inventory_data, mark_order_as_paid, orders,
+                       redeem_mpesa_payment, remove_from_cart, sales_point)
 
 urlpatterns = [
     path("", sales_point, name="sales-point"),
@@ -14,4 +14,7 @@ urlpatterns = [
     path("inventories/", InventoryAPIView.as_view(), name="get_table_data"),
     path("inventory-data/", get_inventory_data, name="inventory-data"),
     path("mpesa-payments/", MpesaPaymentAPIView.as_view(), name="mpesa-payments"),
+
+    path("orders/", orders, name="orders"),
+    path("mark-order-as-paid/<int:user_id>/", mark_order_as_paid, name="mark-order-as-paid"),
 ]

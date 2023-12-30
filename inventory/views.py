@@ -42,7 +42,7 @@ def inventory(request):
         name = request.POST.get("name")
         stock_items = Inventory.objects.filter(Q(name__icontains=name))
 
-    paginator = Paginator(stock_items, 10)
+    paginator = Paginator(stock_items, 12)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 

@@ -46,6 +46,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "WebPOS.middleware.CashierMiddleware",
 ]
 
 ROOT_URLCONF = "WebPOS.urls"

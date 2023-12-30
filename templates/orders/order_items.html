@@ -1,0 +1,19 @@
+<div class="modal fade" id="orderItemsModal{{order.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Order Items</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        {% for order_item in order.items %}
+          <p><b>Item:</b> {{order_item.item}} <span class="ml-5 mr-5"><b>Quantity:</b> {{order_item.quantity}}</span> <b>Price:</b> {{order_item.price}}</p>
+          <hr class="my-2">
+        {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>

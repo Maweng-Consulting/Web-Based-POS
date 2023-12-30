@@ -8,6 +8,7 @@ ORDER_STATUS_CHOICES = (
     ("Cancelled", "Cancelled"),
     ("Processed", "Processed"),
     ("Pending", "Pending"),
+    ("Paid", "Paid"),
 )
 
 
@@ -25,6 +26,9 @@ class Order(AbstractBaseModel):
 
     def __str__(self):
         return str(self.id)
+    
+    def items(self):
+        return self.orderitems.all()
 
 
 class OrderItem(AbstractBaseModel):
@@ -36,6 +40,8 @@ class OrderItem(AbstractBaseModel):
 
 
 class TemporaryCustomerCartItem(AbstractBaseModel):
+    user = models.ForeignKey("users.User", on_delete=models.SET_NULL, null=True)
+    cashier_id = models.IntegerField(null=True)
     item = models.OneToOneField("inventory.Inventory", on_delete=models.CASCADE)
     quantity = models.FloatField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2)

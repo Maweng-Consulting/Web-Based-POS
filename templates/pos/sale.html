@@ -20,10 +20,28 @@
 
 </head>
 <body>
- 
+  <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="{% url 'home' %}">SHOP</a>
+  
+    <ul class="navbar-nav flex-row d-md-none">
+      <li class="nav-item text-nowrap">
+        <button class="nav-link px-3 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSearch" aria-controls="navbarSearch" aria-expanded="false" aria-label="Toggle search">
+          <svg class="bi"><use xlink:href="#search"/></svg>
+        </button>
+      </li>
+      <li class="nav-item text-nowrap">
+        <button class="nav-link px-3 text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+          <svg class="bi"><use xlink:href="#list"/></svg>
+        </button>
+      </li>
+      
+    </ul>
+    
+  
+  </header>
 <div class="container-fluid">
-<div class="row m-3">
-    <div class="col-sm-4">
+<div class="row mt-3">
+    <div class="col">
         <div class="row">
           <div class="col">
             <h3 class="text-center">Cart Items</h3>
@@ -32,19 +50,48 @@
         </div>
         <hr/>
         <div class="table-responsive small">
-            <table class="table table-striped table-sm">
+            <table class="table table-sm">
               <thead>
                 <tr>
                   <th scope="col">Item</th>
                   <th scope="col">Quantity</th>
                   <th scope="col">Price</th>
+                  <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
                 {% for order_item in cart_items %}
                 <tr>
                   <td>{{order_item.item}}</td>
-                  <td>{{order_item.quantity}}</td>
+                  <td>
+                    <form method="POST">
+                      {% csrf_token %}
+                      <input 
+                        type="number"
+                        class="form-control"
+                        name="item_id"
+                        id="item_id"
+                        value="{{order_item.id}}"
+                        hidden
+                      />
+                      <div class="row">
+                        <div class="col-6">
+                          <input 
+                          type="number"
+                          class="form-control form-control-sm"
+                          name="new_amount"
+                          id="new_amount"
+                          value="{{order_item.quantity}}"
+                        />
+                        <input type="submit" hidden />
+                      </div>
+                      
+                      
+                      </div>
+                      
+                      
+                    </form>
+                  </td>
                   <td>{{order_item.price}}</td>
                 <td>
                     <a href="{% url 'remove-from-cart' order_item.id %}" class="btn btn-danger btn-sm">
@@ -55,16 +102,35 @@
                     
                 </td>
                 </tr>
-                
                 {% endfor %}
+                <tr>
+                  <td><b>Total Amount:</b></td>
+                  <td>
+                    <b>{{total_cost}}</b>
+                  </td>
+                  
+                  <td>
+                    <a href="#" class="btn btn-warning btn-sm">
+                      Pay
+                
+                    </a>
+                  </td>
+                  <td>
+                    <a href="{% url 'mark-order-as-paid' request.user.id %}" class="btn btn-info btn-sm">
+                      Paid
+                    </a>
+                  </td>
+                </tr>
             
               </tbody>
             </table>
-           
+          
+          
           </div>
+          
     
     </div>
-    
+  <!--
     <div class="col-sm-4">
         <div class="row">
           <div class="col">
@@ -105,12 +171,14 @@
        
         
     </div>
-    <div class="col-sm-4">
+-->
+    <div class="col">
       <table id="my_table" class="display">
         <thead>
             <tr>
               
                 <th>Name</th>
+                <th>Quantity</th>
                 <th>Price</th>
                 <th></th>
             </tr>
@@ -201,6 +269,10 @@ function populateTable(data) {
       {
         title: 'Name',
         data: 'name'
+      },
+      {
+        quantity: 'Quantity',
+        data: 'quantity'
       },
       {
         title: 'Price',
