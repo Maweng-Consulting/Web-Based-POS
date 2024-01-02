@@ -51,8 +51,6 @@ class InventoryLog(AbstractBaseModel):
     quantity = models.FloatField(default=0)
     reason = models.CharField(max_length=255, null=True)
 
-    def __str__(self):
-        return self.item.name
 
 
 class MpesaPayment(AbstractBaseModel):

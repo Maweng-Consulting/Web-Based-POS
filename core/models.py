@@ -1,5 +1,9 @@
-from django.db import models
+from datetime import datetime
 
+from django.db import models
+from django.utils import timezone
+
+date_today = timezone.now()
 
 # Create your models here.
 class AbstractBaseModel(models.Model):

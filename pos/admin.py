@@ -7,3 +7,7 @@ from .models import Order, OrderItem, TemporaryCustomerCartItem
 @admin.register(TemporaryCustomerCartItem)
 class TemporaryCustomerCartItemAdmin(admin.ModelAdmin):
     list_display = ["user", "cashier_id", "item", "quantity", "price"]
+
+
+admin.site.register(Order)
+admin.site.register(OrderItem)
