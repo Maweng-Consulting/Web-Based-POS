@@ -1,3 +1,4 @@
+import calendar
 import csv
 from datetime import datetime
 
@@ -16,13 +17,75 @@ def sales_by_product(request):
     product_sales = ProductSale.objects.all().order_by("-created")
 
     if request.method == "POST":
-        search_text = request.POST.get("search_text")
+        product_name = request.POST.get("product_name")
         action_type = request.POST.get("action_type")
-        starting_date = request.POST.get("starting_date")
-        ending_date = request.POST.get("ending_date")
+        product_sale_month = request.POST.get("product_sale_month")
+        product_sale_year = request.POST.get("product_sale_year")
 
-        if search_text:
-            product_sales = ProductSale.objects.filter(Q(item__name__icontains=search_text))
+        if product_sale_month:
+            product_sale_month = int(product_sale_month)
+
+        if product_sale_year:
+            product_sale_year = int(product_sale_year)
+
+        if product_name:
+            product_sales = ProductSale.objects.filter(Q(item__name__icontains=product_name))
+
+        if action_type == "export":
+            product_sales_export = ProductSale.objects.all()
+
+            report_name = "Product Sales Report"
+
+            if product_name and product_sale_year and product_sale_month:
+                product_sales_export = ProductSale.objects.filter(
+                    Q(item__name__icontains=product_name)
+                ).filter(created__year=product_sale_year).filter(created__month=product_sale_month)
+
+                report_name = f"Products Sales Report -{calendar.month_name[product_sale_month]} - {product_sale_year}"
+
+            elif product_name and product_sale_year:
+                product_sales_export = ProductSale.objects.filter(
+                    Q(item__name__icontains=product_name)
+                ).filter(created__year=product_sale_year)
+
+                report_name = f"Products Sales Report - {product_sale_year}"
+            
+            elif product_name and product_sale_month:
+                product_sales_export = ProductSale.objects.filter(
+                    Q(item__name__icontains=product_name)
+                ).filter(created__month=product_sale_month)
+
+                report_name = f"Products Sales Report -{calendar.month_name[product_sale_month]}"
+
+            elif product_sale_year and product_sale_month:
+                product_sales_export = ProductSale.objects.filter(
+                    created__year=product_sale_year).filter(created__month=product_sale_month)
+
+                report_name = f"Products Sales Report -{calendar.month_name[product_sale_month]} - {product_sale_year}"
+
+            elif product_name:
+                product_sales_export = ProductSale.objects.filter(Q(item__name__icontains=product_name))
+
+                report_name = "Products Sales Report"
+
+            elif product_sale_month:
+                product_sales_export = ProductSale.objects.filter(created__month=product_sale_month)
+                report_name = f"Product Sales Report -{calendar.month_name[product_sale_month]}"
+
+            elif product_sale_year:
+                product_sales_export = ProductSale.objects.filter(created__year=product_sale_year)
+                report_name = f"Product Sales Report - {product_sale_year}"
+
+            response = HttpResponse(content_type='text/csv')
+            file_name =  f'attachment; filename="{report_name}.csv"'    
+            response['Content-Disposition'] = file_name
+            writer = csv.writer(response)
+            writer.writerow(["ID", "Sale Date", "Item Sold", "Unit Price", "Quantity", "Sales Total"]) 
+            product_sales_values = product_sales_export.values_list('id', 'created__date', 'item__name', 'unit_price', 'total_quantity', 'total_price')  
+
+            for sale in product_sales_values:
+                writer.writerow(sale)
+            return response
 
     paginator = Paginator(product_sales, 15)
     page_number = request.GET.get("page")
@@ -56,6 +119,7 @@ def monthly_sales(request):
 
     if request.method == "POST":
         action_type = request.POST.get("action_type")
+        search_text = request.POST.get("search_text")
 
         sales_year = request.POST.get("sales_year")
         sales_month = request.POST.get("sales_month")
@@ -77,6 +141,9 @@ def monthly_sales(request):
         
         print(f"Action Type: {action_type}, Year: {sales_year}, Month: {sales_month}")
 
+        if search_text:
+            monthly_sales = ProductSale.objects.filter(Q(item__name__icontains=search_text))
+
         
         if year and month:
             monthly_sales = ProductSale.objects.filter(created__year=year).filter(created__month=month)
@@ -90,18 +157,23 @@ def monthly_sales(request):
         if action_type == "export":
             monthly_sales_export = ProductSale.objects.all()
 
+            report_name = "Monthly Sales Report"
+
             if sales_year and sales_month:
                 monthly_sales_export = ProductSale.objects.filter(created__year=sales_year).filter(created__month=sales_month)
+                report_name = f"Monthly Sales Report - {calendar.month_name[sales_month]} - {sales_year}"
 
-            elif sales_year:
+            elif sales_year:    
                 monthly_sales_export = ProductSale.objects.filter(created__year=sales_year)
+                report_name = f"Monthly Sales Report - {sales_year}"
 
             elif sales_month:
                 monthly_sales_export = ProductSale.objects.filter(created__month=sales_month)
+                report_name = f"Monthly Sales Report - {calendar.month_name[sales_month]}"
 
         
             response = HttpResponse(content_type='text/csv')
-            file_name =  f'attachment; filename="Monthly Sales Report - {date_today}.csv"'    
+            file_name =  f'attachment; filename="{report_name}.csv"'    
             response['Content-Disposition'] = file_name
             writer = csv.writer(response)
             writer.writerow(["ID", "Sale Date", "Item Sold", "Unit Price", "Quantity", "Sales Total"]) 
