@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-3">
+        <h3>Sales By Product</h3>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-5">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          <div class="row">
+            <div class="col">
+              <input type="text" class="form-control" name="search_text" id="search_text" placeholder="Product...">
+            </div>
+            
+            <div class="col-5">
+              <button class="btn btn-success">Search</button>
+            </div>
+          </div>
+          
+        </div>
+      </form>
+    </div>
+    <div class="col-5">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          <div class="row">
+            <div class="col-4">
+              <input type="date" class="form-control" id="start_date" name="start_date" onchange="getDates()">
+            </div>
+            <div class="col-4">
+                <input type="date" class="form-control" id="end_date" name="end_date" onchange="getDates()">
+              </div>
+            <div class="col-4">
+              <button class="btn btn-success">Search</button>
+    
+            </div>
+          </div>
+          
+        </div>
+        
+      </form>
+
+    </div>
+    <div class="col-2">
+      <form method="POST" id="downloadForm">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          <div class="row">
+            <div class="col">
+              <input type="text" class="form-control" hidden id="action_type" name="action_type" value="export">
+            </div>
+            <div class="col">
+              <input type="date" hidden class="form-control" id="starting_date" name="starting_date">
+            </div>
+            <div class="col">
+                <input type="date" hidden class="form-control" id="ending_date" name="ending_date">
+              </div>
+            
+            <div class="col">
+              <button class="btn btn-success">Export</button>
+            </div>
+          </div>
+          
+        </div>
+    
+      </form>
+
+    </div>
+
+</div>
+
+<hr/>
+      <div class="table-responsive small">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Sold On</th>
+              <th scope="col">Item</th>
+              <th scope="col">Unit Price</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Total Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product_sale in page_obj %}
+            <tr>
+              <td>{{product_sale.id}}</td>
+              <td>{{product_sale.created.date}}</td>
+              <td>{{product_sale.item.name}}</td>
+              <td>{{product_sale.unit_price}}</td>
+              <td>{{product_sale.total_quantity}}</td>
+              <td>{{product_sale.total_price}}</td>
+            </tr>
+           
+           
+            {% endfor %}
+
+          </tbody>
+        </table>
+        <div>
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+              {% if page_obj.has_previous %}   
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+              {% endif %}
+              <a class="page-link" href="#">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a>
+              {% if page_obj.has_next %}    
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+              {% endif %}   
+            </ul>
+          </nav>
+        </div>
+      </div>
+{% endblock content %}
+{% block additional_scripts %}
+
+<script>
+
+  const getDates = async () => {
+    console.log("Form Filltered!!!!!!!!!")
+    var startDate = document.getElementById("start_date");
+    var startDateValue = startDate.value;
+
+    var endDate = document.getElementById("end_date");
+    var endDateValue = endDate.value;
+
+    if (startDate && endDate) {
+      sessionStorage.setItem("start_date", startDateValue)
+      sessionStorage.setItem("end_date", endDateValue)
+    }
+
+    console.log(`Start Date: ${startDateValue}, End Date: ${endDateValue}`)
+  }
+
+  function loadFormData() {
+    var form = document.getElementById('downloadForm');
+    form.elements['starting_date'].value = sessionStorage.getItem('start_date') || '';
+    form.elements['ending_date'].value = sessionStorage.getItem('end_date') || '';
+  }
+
+    // Load form data from sessionStorage when the DOM content is loaded
+    document.addEventListener('DOMContentLoaded', loadFormData);
+
+
+</script>
+
+{% endblock additional_scripts %}

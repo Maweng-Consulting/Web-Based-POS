@@ -2,24 +2,30 @@
 
 {% block content %}
 <div class="row">
-    <div class="col">
+    <div class="col-4">
         <h3>Orders</h3>
     </div>
-    <div class="col">
+    <div class="col-8">
       <form method="POST">
         {% csrf_token %}
         <div class="input-group mb-3">
           <div class="row">
-            <div class="col-7">
+            <div class="col-4">
               <input type="text" class="form-control" name="reg_number" id="reg_number" placeholder="Order ID ...">
             </div>
-            <div class="col-5">
+            <div class="col-4">
+              <select class="form-select" id="sale_type" name="sale_type">
+                <option value=""></option>
+                <option value="Cash">Cash Sale</option>
+                <option value="Credit">Credit Sale</option>
+              </select>
+            </div>
+            <div class="col-4">
               <button class="btn btn-success">Search</button>
             </div>
           </div>
           
         </div>
-        
       </form>
     </div>
 </div>
@@ -34,7 +40,7 @@
               <th scope="col">Served By</th>
               <th scope="col">Cost</th>
               <th scope="col">Status</th>
-              <th scope="col">Payment Method</th>
+              <th scope="col">Sale Type</th>
               <th scope="col" colspan="2">Actions</th>
             </tr>
           </thead>
@@ -50,7 +56,7 @@
               <td>
                 <a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#orderItemsModal{{ order.id }}"><i class="bi bi-eye-fill"></i></a>
               </td>
-              <td><a href="#" class="btn btn-warning btn-sm">
+              <td><a href="{% url 'print-order' order.id %}" class="btn btn-warning btn-sm">
                 <i class="bi bi-printer"></i>
               </a></td>
             </tr>
