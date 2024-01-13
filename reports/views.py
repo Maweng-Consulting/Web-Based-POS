@@ -94,20 +94,6 @@ def sales_by_product(request):
 
     items = Inventory.objects.all()
 
-
-    # Assuming your model is named OrderItem
-    queryset = OrderItem.objects.annotate(
-        year=TruncYear('created'),
-        month=TruncMonth('created'),
-    ).values('year', 'month', 'item').annotate(
-        total_quantity=Sum('quantity'),
-        total_price=Sum('price'),
-    ).order_by('year', 'month', 'item')
-
-    for x in queryset:
-        print(x)
-
-
     context = {
         "page_obj": page_obj,
         "items": items
@@ -198,3 +184,18 @@ def monthly_sales(request):
         "page_obj": page_obj
     }
     return render(request, "reports/monthly_sales.html", context)
+
+
+def daily_and_weekly_sales(request):
+    weekly_sales = ProductSale.objects.all().order_by("-created")
+
+    paginator = Paginator(weekly_sales, 15)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    items = Inventory.objects.all()
+    context = {
+        "page_obj": page_obj,
+        "items": items
+    }
+    return render(request, "reports/weekly_sales.html", context)
