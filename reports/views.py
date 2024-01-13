@@ -189,6 +189,16 @@ def monthly_sales(request):
 def daily_and_weekly_sales(request):
     weekly_sales = ProductSale.objects.all().order_by("-created")
 
+    if request.method == "POST":
+        action_type = request.POST.get("action_type")
+        product_name = request.POST.get("product_name")
+        report_start_date = request.POST.get("report_start_date")
+        report_end_date = request.POST.get("report_end_date")
+
+
+        print(f"Product: {product_name}, Start Date: {report_start_date}, End Date: {report_end_date}")
+
+
     paginator = Paginator(weekly_sales, 15)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
