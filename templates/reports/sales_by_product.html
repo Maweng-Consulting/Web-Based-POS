@@ -1,4 +1,22 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block additional_css %}
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<style>
+  .select2-container .select2-selection--single{
+  height:34px !important;
+}
+.select2-container--default .select2-selection--single{
+       border: 1px solid #ccc !important; 
+
+}
+</style>
+
+{% endblock additional_css %}
 
 {% block content %}
 <div class="row">
@@ -13,8 +31,13 @@
         {% csrf_token %}
         
           <div class="row">
-            <div class="col-3">
-              <input type="text" class="form-control" name="product_name" id="product_name" placeholder="Product..." onchange="getDates()">
+            <div class="col-5">
+              <select class="select2 form-select" name="product_name" id="product_name" onchange="getDates()">
+                <option value="">---</option>
+                {% for item in items %}
+                  <option value="{{item.name}}">{{item.name}}</option>
+                {% endfor %}
+              </select>
             </div>
 
             <div class="col-3">
@@ -34,7 +57,7 @@
                   <option value="12">December</option>
               </select>
             </div>
-          <div class="col-3">
+          <div class="col-2">
               <select class="form-select" id="year_value" name="year_value" onchange="getDates()">
                 <option value=""></option>  
                 <option value="2024">2024</option>
@@ -52,7 +75,7 @@
               </select>
           </div>
             
-            <div class="col-3">
+            <div class="col-2">
               <button class="btn btn-success">Filter</button>
             </div>
           </div>
@@ -92,7 +115,7 @@
 
 </div>
 
-<hr/>
+
       <div class="table-responsive small">
         <table class="table table-sm">
           <thead>
@@ -137,8 +160,11 @@
       </div>
 {% endblock content %}
 {% block additional_scripts %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
 <script>
+ $('.select2').select2();
 
   const getDates = async () => {
     console.log("Form Filltered!!!!!!!!!")

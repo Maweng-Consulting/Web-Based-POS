@@ -8,6 +8,7 @@ from django.db.models.functions import TruncDate, TruncMonth, TruncYear
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
+from inventory.models import Inventory
 from pos.models import Order, OrderItem
 from reports.models import ProductSale
 
@@ -91,6 +92,8 @@ def sales_by_product(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
+    items = Inventory.objects.all()
+
 
     # Assuming your model is named OrderItem
     queryset = OrderItem.objects.annotate(
@@ -106,7 +109,8 @@ def sales_by_product(request):
 
 
     context = {
-        "page_obj": page_obj
+        "page_obj": page_obj,
+        "items": items
     }
     return render(request, "reports/sales_by_product.html", context)
 
