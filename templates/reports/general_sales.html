@@ -9,9 +9,13 @@
         <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#filterGeneralReportModal">Filter</a>
     </div>
     <div class="col-2">
-        <form method="POST">
+        <form method="POST" id="downloadForm">
             {% csrf_token %}
             <input type="text" value="export" id="action_type" name="action_type" hidden />
+            <input type="number" id="served_by" name="served_by" hidden />
+            <input type="date" id="sales_from_date" name="sales_from_date" hidden />
+            <input type="date" id="sales_to_date" name="sales_to_date" hidden />
+            <input type="text" id="order_type" name="order_type" hidden />
             <button type="submit" class="btn btn-primary">Export</button>
         </form>
     </div>
@@ -62,3 +66,20 @@
         </div>
       </div>
 {% endblock content %}
+
+{% block additional_scripts %}
+<script>
+   function loadFormData() {
+     var form = document.getElementById('downloadForm');
+     form.elements['sales_from_date'].value = sessionStorage.getItem('sales_from') || '';
+     form.elements['sales_to_date'].value = sessionStorage.getItem('sales_to') || '';
+     form.elements['served_by'].value = sessionStorage.getItem('sold_by') || '';
+     form.elements['order_type'].value = sessionStorage.getItem('sale_type') || '';
+   }
+ 
+     // Load form data from sessionStorage when the DOM content is loaded
+     document.addEventListener('DOMContentLoaded', loadFormData);
+
+</script>
+
+{% endblock additional_scripts %}

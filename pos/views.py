@@ -204,6 +204,7 @@ def mark_order_as_paid(request, user_id=None):
         served_by=user,
         status="Paid",
         payment_method="Cash",
+        order_type="Paid",
         total_cost=total_cost
     )
 
