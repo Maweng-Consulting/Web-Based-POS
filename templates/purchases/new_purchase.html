@@ -1,0 +1,76 @@
+<div class="modal fade" id="newPurchaseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-center">New Purchase</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+            <form action="{% url 'new-purchase' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+
+                    <div class="">
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="recorded_by"
+                          name="recorded_by"
+                          value="{{request.user.id}}"
+                          readonly
+                          hidden
+                          required
+                        />
+                      </div>
+                  
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">Supplier</label>
+                  <select class="form-select" id="supplier_id" name="supplier_id">
+                    {% for supplier in suppliers %}
+                        <option value="{{supplier.id}}">{{supplier.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+            
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Amount Expected</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="cost"
+                      name="cost"
+                      min="0"
+                      value="0"
+                      required
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Amount Paid</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="amount_paid"
+                      name="amount_paid"
+                      min="0"
+                      value="0"
+                      required
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Purchase Type</label>
+                    <select class="form-select" id="purchase_type" name="purchase_type">
+                        <option value="Paid">Paid Purchase</option>
+                        <option value="Credit">Credit Purchase</option>
+                    </select>
+                  </div>
+                  
+                  
+                <div class="text-center mt-2">
+                  <button type="submit" class="btn btn-primary">Submit Invoice</button>
+                </div>
+              </div>
+              </form>
+      </div>
+    </div>
+  </div>

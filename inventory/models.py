@@ -60,3 +60,19 @@ class MpesaPayment(AbstractBaseModel):
 
     def __str__(self):
         return self.phone_number
+
+
+PURCHASE_TYPES = (
+    ("Paid", "Paid"),
+    ("Credit", "Credit"),
+)
+
+class Purchase(AbstractBaseModel):
+    recorded_by = models.ForeignKey("users.User", on_delete=models.SET_NULL, null=True)
+    supplier = models.ForeignKey("suppliers.Supplier", on_delete=models.SET_NULL, null=True)
+    cost = models.DecimalField(max_digits=100, decimal_places=2, default=0)
+    amount_paid = models.DecimalField(max_digits=100, decimal_places=2, default=0)
+    purchase_type = models.CharField(max_length=255, choices=PURCHASE_TYPES, null=True)
+
+    def __str__(self):
+        return self.recorded_by.username
