@@ -21,7 +21,6 @@ from users.models import Customer, User
 
 from .models import CreditOrder, Order, OrderItem, TemporaryCustomerCartItem
 from .serializers import InventorySerializer, MpesaPaymentSerializer
-from .tables import InventoryTable
 
 date_today = datetime.now().date()
 
