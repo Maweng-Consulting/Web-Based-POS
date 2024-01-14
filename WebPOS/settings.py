@@ -35,8 +35,6 @@ INSTALLED_APPS = [
     "suppliers",
     "payments",
     "reports",
-
-    'table',
 ]
 
 MIDDLEWARE = [
