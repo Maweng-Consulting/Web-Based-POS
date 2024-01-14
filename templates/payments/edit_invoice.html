@@ -1,0 +1,144 @@
+<div
+  class="modal fade"
+  id="editInvoiceModal{{invoice.id}}"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-center">Edit Invoice</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form
+        action="{% url 'edit-invoice' %}"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        {% csrf_token %}
+        <div class="modal-body">
+          <input
+            type="number"
+            class="form-control"
+            id="invoice_id"
+            name="invoice_id"
+            min="0"
+            value="{{invoice.id}}"
+            hidden
+            readonly
+            required
+          />
+          <div class="row mb-3">
+            <div class="col">
+              <label for="exampleInputPassword1" class="form-label"
+                >Supplier</label
+              >
+              <select
+                class="form-select"
+                id="supplier_id"
+                name="supplier_id"
+                value="{{invoice.supplier.id}}"
+              >
+                {% for supplier in suppliers %}
+                <option value="{{supplier.id}}">{{supplier.name}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col">
+              <label for="exampleInputPassword1" class="form-label"
+                >Amount Expected</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="amount_expected"
+                name="amount_expected"
+                min="0"
+                value="{{invoice.amount_expected}}"
+                required
+              />
+            </div>
+            <div class="col">
+              <label for="exampleInputPassword1" class="form-label"
+                >Amount Paid</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="amount_paid"
+                name="amount_paid"
+                min="0"
+                value="{{invoice.amount_paid}}"
+                required
+                readonly
+              />
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col">
+              <label for="exampleInputPassword1" class="form-label"
+                >Date Supplied</label
+              >
+              <input
+                type="date"
+                class="form-control"
+                id="date_supplied"
+                name="date_supplied"
+                value="{{invoice.date_supplied}}"
+                required
+              />
+            </div>
+            <div class="col">
+              <label for="exampleInputPassword1" class="form-label"
+                >Date Due</label
+              >
+              <input
+                type="date"
+                class="form-control"
+                id="date_due"
+                name="date_due"
+                value="{{invoice.date_due}}"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label"
+              >Invoice Status</label
+            >
+            <select
+              class="form-select"
+              id="status"
+              name="status"
+              value="{{invoice.status}}"
+            >
+              <option value="Paid">Paid</option>
+              <option value="Paying">Still Paying</option>
+              <option value="Defaulted">Defaulted</option>
+              <option value="Payment Pending">Payment Pending</option>
+              <option value="Cancelled">Cancelled</option>
+              <option value="Review">Reviewing</option>
+            </select>
+          </div>
+
+          <div class="text-center mt-2">
+            <button type="submit" class="btn btn-primary">
+              Submit Invoice
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

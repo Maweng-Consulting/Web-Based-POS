@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block additional_css %}
+{% endblock additional_css %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h3>Suppliers</h3>
+    </div>
+    <div class="col">
+        <a class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#newSupplierModal">New Supplier</a>
+    </div>
+    <div class="col">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="input-group mb-2">
+          <div class="row">
+            <div class="col">
+              <input type="text" class="form-control" name="search_text" id="search_text" placeholder="Name...">
+            </div>
+            <div class="col">
+              <button class="btn btn-success btn-sm">Search</button>
+            </div>
+          </div>
+          
+        </div>
+        
+      </form>
+    </div>
+</div>
+
+<hr/>
+      <div class="table-responsive small">
+        <table class="table table-sm">
+          <thead class="">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Contact Person</th>
+              <th scope="col">Phone No.</th>
+              <th scope="col">Email</th>
+              <th scope="col">Address</th>
+              <th scope="col" colspan="3"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for supplier in page_obj %}
+            <tr>
+              <td>{{supplier.id}}</td>
+              <td>{{supplier.name}}</td>
+              <td>{{supplier.user.name}}</td>
+              <td>{{supplier.phone_number}}</td>
+              <td>{{supplier.email}}</td>
+              <td>{{supplier.city}}-{{supplier.country}}</td>
+              <td><a href="{% url 'supplier-details' supplier.id %}" class="btn btn-info btn-sm">
+                <i class="bi bi-eye"></i>
+              </a>
+              </td>
+              <td><a class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editSupplierModal{{ supplier.id }}">
+                <i class="bi bi-pencil-square"></i>
+              </a>
+              </td>
+            <td><a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteSupplierModal{{ supplier.id }}">
+                <i class="bi bi-trash"></i>
+              </a></td>
+              
+            </tr>
+           {% include "suppliers/edit_supplier.html" %}
+           {% include "suppliers/delete_supplier.html" %}
+            {% endfor %}
+
+          </tbody>
+        </table>
+        <div>
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+              {% if page_obj.has_previous %}   
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+              {% endif %}
+              <a class="page-link" href="#">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a>
+              {% if page_obj.has_next %}    
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+              {% endif %}   
+            </ul>
+          </nav>
+        </div>
+      </div>
+{% endblock content %}

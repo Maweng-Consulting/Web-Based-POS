@@ -1,0 +1,199 @@
+<div class="modal fade" id="editSupplierModal{{supplier.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-center">Edit Supplier - {{supplier.name}}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+            <form action="{% url 'edit-supplier' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <h6 class="text-center">Contact Person</h6>
+                    <hr>
+                    <input
+                    type="number"
+                    class="form-control"
+                    id="supplier_id"
+                    name="supplier_id"
+                    value="{{supplier.id}}"
+                    hidden
+                    required
+                  />
+                    <div class="row mb-3">
+                        <div class="col">
+                          <label for="exampleInputPassword1" class="form-label">First Name</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="first_name"
+                            name="first_name"
+                            value="{{supplier.user.first_name}}"
+                            required
+                          />
+                        </div>
+                        <div class="col">
+                          <label for="exampleInputPassword1" class="form-label">Last Name</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="last_name"
+                            name="last_name"
+                            value="{{supplier.user.last_name}}"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <div class="col">
+                          <label for="exampleInputPassword1" class="form-label">ID Number</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="id_number"
+                            name="id_number"
+                            value="{{supplier.user.id_number}}"
+                            required
+                          />
+                        </div>
+                        <div class="col">
+                          <label for="exampleInputPassword1" class="form-label">Phone Number</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="phone_number"
+                            name="phone_number"
+                            value="{{supplier.user.phone_number}}"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <div class="col">
+                          <label for="exampleInputPassword1" class="form-label">Email</label>
+                          <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            name="email"
+                            value="{{supplier.user.email}}"
+                            required
+                          />
+                        </div>
+                        <div class="col">
+                          <label for="exampleInputPassword1" class="form-label">Username</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="username"
+                            name="username"
+                            value="{{supplier.user.username}}"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col">
+                          <label class="form-label">Gender</label>
+                          <select class="form-select" id="gender" name="gender" value="{{supplier.user.gender}}">
+                              <option value="Male">Male</option>
+                              <option value="Female">Female</option>
+          
+                            </select>
+                        </div>
+                      </div>
+                      <h6 class="text-center">Supplier</h6>
+                      <hr>
+                      <div class="row mb-3">
+                        <div class="col">
+                        <label for="exampleInputPassword1" class="form-label">Supplier Name</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="name"
+                            name="name"
+                            value="{{supplier.name}}"
+                            required
+                          />
+                        </div>
+                        <div class="col">
+                            <label for="exampleInputPassword1" class="form-label">Supplier Phone No.</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="supplier_phone"
+                            name="supplier_phone"
+                            value="{{supplier.phone_number}}"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col">
+                            <label for="exampleInputPassword1" class="form-label">Supplier Email</label>
+                          <input
+                            type="email"
+                            class="form-control"
+                            id="supplier_email"
+                            name="supplier_email"
+                            value="{{supplier.email}}"
+                            required
+                          />
+                        </div>
+                        <div class="col">
+                            <label for="exampleInputPassword1" class="form-label">Supplies</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="supplies"
+                            name="supplies"
+                            value="{{supplier.supplies}}"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col">
+                            <label for="exampleInputPassword1" class="form-label">Address</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="address"
+                            name="address"
+                            value="{{supplier.address}}"
+                            required
+                          />
+                        </div>
+                        <div class="col">
+                            <label for="exampleInputPassword1" class="form-label">City/Town</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="city"
+                            name="city"
+                            value="{{supplier.address}}"
+                            required
+                          />
+                        </div>
+                        <div class="col">
+                            <label for="exampleInputPassword1" class="form-label">Country</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="country"
+                            value="{{supplier.country}}"
+                            name="country"
+                            required
+                          />
+                        </div>
+                      </div>
+                  
+                <div class="text-center mt-2">
+                  <button type="submit" class="btn btn-primary">Submit Supplier</button>
+                </div>
+              </div>
+              </form>
+      </div>
+    </div>
+  </div>

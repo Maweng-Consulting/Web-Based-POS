@@ -2,60 +2,59 @@
 
 {% block content %}
 <div class="row">
-    <div class="card m-2" style="width: 16rem; height: 150px;">
-        <div class="card-body">
-          <h5 class="card-title">Students Registered</h5>
-          <hr/>
-          <p class="card-text">Students Count: {{students}}</p>
-          <a href="#"></a>
-        </div>
-      </div>
-      <div class="card m-2" style="width: 16rem; height: 150px;">
+      <div class="card m-2" style="width: 16rem; height: 180px;">
        
         <div class="card-body">
           <h5 class="card-title">Staff</h5>
           <hr/>
-          <p class="card-text">Staff Count: {{staffs}}</p>
+          <p class="card-text">Staff Count: {{staff_count}}</p>
+          <a href="{% url 'staff' %}" class="btn btn-info">See List</a>
         </div>
       </div>
-      <div class="card m-2" style="width: 16rem; height: 150px;">
+
+      <div class="card m-2" style="width: 16rem; height: 180px;">
+       
+        <div class="card-body">
+          <h5 class="card-title">Customers</h5>
+          <hr/>
+          <p class="card-text">Count: {{customers_count}}</p>
+          <a href="{% url 'customers' %}" class="btn btn-info">See List</a>
+        </div>
+      </div>
+      
+      <div class="card m-2" style="width: 16rem; height: 180px;">
         <div class="card-body">
           <h5 class="card-title">Orders Placed Today</h5>
           <hr/>
           <p class="card-text">Orders Count: {{orders_today}}</p>
-         
+          <a href="#" class="btn btn-info">See Report</a>
         </div>
       </div>
   </div>
   <div class="row">
-      <div class="card m-2" style="width: 16rem; height: 200px;">
+      <div class="card m-2" style="width: 16rem; height: 180px;">
         <div class="card-body">
           <h5 class="card-title">Sales This Week</h5>
           <hr/>
-          <p class="card-text">Wallet: {{wallet_sales_this_week}}</p>
-          <p class="card-text">Cash: {{cash_sales_this_week}}</p>
-          <p class="card-text">Mpesa: {{mpesa_sales_this_week}}</p>
-          <a href="#"></a>
+          <p class="card-text">Amount: {{wallet_sales_this_week}}</p>
+          <a href="#" class="btn btn-info">See Report</a>
         </div>
       </div>
-      <div class="card m-2" style="width: 16rem; height: 200px;">
+      <div class="card m-2" style="width: 16rem; height: 180px;">
         <div class="card-body">
           <h5 class="card-title">Sales This Month</h5>
           <hr/>
-          <p class="card-text">Wallet: {{wallet_sales_this_month}}</p>
-          <p class="card-text">Cash: {{cash_sales_this_month}}</p>
-          <p class="card-text">Mpesa: {{mpesa_sales_this_month}}</p>
-          <a href="#"></a>
+          <p class="card-text">Amount: {{wallet_sales_this_month}}</p>
+         
+          <a href="#" class="btn btn-info">See Report</a>
         </div>
       </div>
-      <div class="card m-2" style="width: 16rem; height: 200px;">
+      <div class="card m-2" style="width: 16rem; height: 180px;">
         <div class="card-body">
           <h5 class="card-title">Sales Today</h5>
           <hr/>
-          <p class="card-text">Wallet: {{wallet_sales_today}}</p>
-          <p class="card-text">Cash: {{cash_sales_today}}</p>
-          <p class="card-text">Mpesa: {{mpesa_sales_today}}</p>
-          <a href="#"></a>
+          <p class="card-text">Amount: {{wallet_sales_today}}</p>
+          <a href="#" class="btn btn-info">See Report</a>
         </div>
       </div>
   

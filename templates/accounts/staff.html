@@ -3,10 +3,10 @@
 {% block content %}
 <div class="row">
     <div class="col-4">
-        <h3>Staff Members</h3>
+        <h3>Employees/Staff</h3>
     </div>
     <div class="col-4">
-        <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newStaffModal">Add Staff</a>
+        <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newStaffModal">New Employee</a>
     </div>
     <div class="col-4">
       <form method="POST">
@@ -51,8 +51,12 @@
               <td>{{staff.phone_number}}</td>
               <td>{{staff.email}}</td>
               <td>{{staff.role}}</td>
-              <td><a class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editStaffModal{{ staff.id }}">Edit</a></td>
-              <td><a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteStaffModal{{ staff.id }}">Delete</a></td>
+              <td><a class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editStaffModal{{ staff.id }}">
+                <i class="bi bi-pencil-square"></i>
+              </a></td>
+              <td><a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteStaffModal{{ staff.id }}">
+                <i class="bi bi-trash"></i>
+              </a></td>
             </tr>
             {% include "accounts/edit_staff.html" %}
             {% include "accounts/delete_staff.html" %}

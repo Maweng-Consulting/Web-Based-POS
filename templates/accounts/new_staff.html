@@ -2,7 +2,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5 text-center">Add Staff</h1>
+          <h1 class="modal-title fs-5 text-center">New Employee</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
             <form action="{% url 'register' %}" method="POST" enctype="multipart/form-data">
@@ -80,19 +80,30 @@
                     <select class="form-select" id="gender" name="gender">
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
-    
+                        <option value="Binary">Binary</option>
                       </select>
                   </div>
 
                   <div class="col">
                     <label class="form-label">Role</label>
                     <select class="form-select" id="role" name="role">
-                        
                         <option value="admin">Admin</option>
                         <option value="cashier">Cashier</option>
-                        <option value="chef">Chef</option>
-    
+                        <option value="agent">Agent</option>
+                        <option value="broker">Broker</option>
                       </select>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col">
+                    <label for="exampleInputPassword1" class="form-label">Position</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="position"
+                      name="position"
+                      required
+                    />
                   </div>
                 </div>
                 

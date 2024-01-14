@@ -2,11 +2,11 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5 text-center">Edit Staff Details</h1>
+          <h1 class="modal-title fs-5 text-center">Edit Employee</h1>
           <hr>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-            <form action="#" method="POST" enctype="multipart/form-data">
+            <form action="{% url 'edit-staff' %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-body">
                   <div class="col">
@@ -111,11 +111,25 @@
                     <label class="form-label">Role</label>
                     <select class="form-select" id="role" name="role" value="{{staff.role}}" required>
                         
-                        <option value="admin">Admin</option>
-                        <option value="cashier">Cashier</option>
-                        <option value="chef">Chef</option>
+                      <option value="admin">Admin</option>
+                      <option value="cashier">Cashier</option>
+                      <option value="agent">Agent</option>
+                      <option value="broker">Broker</option>
     
                       </select>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col">
+                    <label for="exampleInputPassword1" class="form-label">Position</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="position"
+                      name="position"
+                      value="{{staff.position}}"
+                      required
+                    />
                   </div>
                 </div>
                   

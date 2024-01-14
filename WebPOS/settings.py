@@ -32,6 +32,9 @@ INSTALLED_APPS = [
     "pos",
     "inventory",
     "users",
+    "suppliers",
+    "payments",
+    "reports",
 
     'table',
 ]
@@ -44,6 +47,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "WebPOS.middleware.CashierMiddleware",
 ]
 
 ROOT_URLCONF = "WebPOS.urls"
@@ -103,6 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
+
 
 USE_I18N = True
 
