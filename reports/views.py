@@ -6,11 +6,12 @@ from django.core.paginator import Paginator
 from django.db.models import ExpressionWrapper, F, Q, Sum, fields
 from django.db.models.functions import TruncDate, TruncMonth, TruncYear
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from inventory.models import Inventory
 from pos.models import Order, OrderItem
 from reports.models import ProductSale
+from users.models import User
 
 date_today = datetime.now().date()
 # Create your views here.
@@ -311,3 +312,44 @@ def daily_and_weekly_sales(request):
         "items": items
     }
     return render(request, "reports/weekly_sales.html", context)
+
+
+def general_sales_report(request):
+    orders = Order.objects.all().order_by("-created")
+
+    sellers = User.objects.filter(role="cashier")
+
+    if request.method == "POST":
+        sold_by = request.POST.get("sold_by")
+        sale_type = request.POST.get("sale_type")
+        sales_from = request.POST.get("sales_from")
+        sales_to = request.POST.get("sales_to")
+        action_type = request.POST.get("action_type")
+
+        print(f"Sold By: {sold_by}, Sale Type: {sale_type}, From: {sales_from}, To: {sales_to}")
+
+        filter_object = {
+            'sold_by': sold_by,
+            'sale_type': sale_type,
+            'sales_from': sales_from,
+            'sales_to': sales_to
+        }
+
+        request.session['filter_object'] = filter_object
+
+        if action_type == "export":
+            filter_data = request.session.get('filter_object', {})
+            print(filter_data)
+
+        return redirect("general-sales-report")
+
+    paginator = Paginator(orders, 12)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "orders": orders,
+        "page_obj": page_obj,
+        "sellers": sellers
+    }
+    return render(request, "reports/general_sales.html", context)

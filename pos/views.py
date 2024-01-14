@@ -9,6 +9,7 @@ from django.core.files import File
 from django.core.files.base import ContentFile
 from django.core.paginator import Paginator
 from django.db import transaction
+from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
@@ -35,14 +36,35 @@ class MpesaPaymentAPIView(generics.ListCreateAPIView):
     serializer_class = MpesaPaymentSerializer
 
 
-def get_inventory_data(request):
-    items = InventoryTable()
-    return render(request, "hello.html", {"items": items})
-
 
 def orders(request):
     orders = Order.objects.all().order_by("-created")
- 
+
+    if request.method == "POST":
+        search_text = request.POST.get("search_text")
+        sale_type = request.POST.get("sale_type")
+
+        print(f"Search Text: {search_text}, Order Type: {sale_type}")
+
+        if search_text and sale_type:
+            orders = Order.objects.filter(
+                Q(served_by__first_name__icontains=search_text) |  
+                Q(served_by__last_name__icontains=search_text) |
+                Q(status__icontains=search_text) |
+                Q(id__icontains=search_text)
+            ).filter(order_type=sale_type)
+
+        elif search_text:
+            orders = Order.objects.filter(
+                Q(served_by__first_name__icontains=search_text) |  
+                Q(served_by__last_name__icontains=search_text) |
+                Q(status__icontains=search_text) |
+                Q(id__icontains=search_text)
+            )
+        elif sale_type:
+            orders = Order.objects.filter(order_type=sale_type)
+
+
     paginator = Paginator(orders, 12)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)

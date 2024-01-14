@@ -1,0 +1,79 @@
+<div
+  class="modal fade"
+  id="filterGeneralReportModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-center">Filter Report</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form action="{% url 'general-sales-report' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="row mb-3">
+            <div class="col">
+              <label for="exampleInputPassword1" class="form-label"
+                >Sales From</label
+              >
+              <input
+                type="date"
+                class="form-control"
+                id="sales_from"
+                name="sales_from"
+              />
+            </div>
+            <div class="col">
+              <label for="exampleInputPassword1" class="form-label"
+                >Sales To</label
+              >
+              <input
+                type="date"
+                class="form-control"
+                id="sales_to"
+                name="sales_to"
+              />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <label for="exampleInputPassword1" class="form-label"
+                >Sold By</label
+              >
+              <select class="form-select" id="sold_by" name="sold_by">
+                <option value=""></option>
+                {% for seller in sellers %}
+                <option value="{{seller.name}}">
+                  {{seller.first_name}} {{seller.last_name}}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col">
+              <label for="exampleInputPassword1" class="form-label"
+                >Sale Type</label
+              >
+              <select class="form-select" id="sale_type" name="sale_type">
+                <option value=""></option>
+                <option value="Paid">Paid Sale</option>
+                <option value="Credit">Credit Sale</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="text-center mt-2">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
