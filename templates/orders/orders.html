@@ -11,12 +11,12 @@
         <div class="input-group mb-3">
           <div class="row">
             <div class="col-4">
-              <input type="text" class="form-control" name="reg_number" id="reg_number" placeholder="Order ID ...">
+              <input type="text" class="form-control" name="search_text" id="search_text" placeholder="Order ID ...">
             </div>
             <div class="col-4">
               <select class="form-select" id="sale_type" name="sale_type">
                 <option value=""></option>
-                <option value="Cash">Cash Sale</option>
+                <option value="Paid">Paid Sale</option>
                 <option value="Credit">Credit Sale</option>
               </select>
             </div>
@@ -37,6 +37,7 @@
             <tr>
               <th scope="col">Order ID</th>
               <th scope="col">Ordered At.</th>
+              <th scope="col">Sold To</th>
               <th scope="col">Served By</th>
               <th scope="col">Cost</th>
               <th scope="col">Status</th>
@@ -49,6 +50,7 @@
             <tr>
               <td>{{order.id}}</td>
               <td>{{order.created}}</td>
+              <td>{{order.customer}}</td>
               <td>{{order.served_by}}</td>
               <td>{{order.total_cost}}</td>
               <td>{{order.status}}</td>

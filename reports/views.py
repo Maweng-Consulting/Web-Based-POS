@@ -6,11 +6,12 @@ from django.core.paginator import Paginator
 from django.db.models import ExpressionWrapper, F, Q, Sum, fields
 from django.db.models.functions import TruncDate, TruncMonth, TruncYear
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from inventory.models import Inventory
 from pos.models import Order, OrderItem
 from reports.models import ProductSale
+from users.models import User
 
 date_today = datetime.now().date()
 # Create your views here.
@@ -87,13 +88,14 @@ def sales_by_product(request):
             file_name = f'attachment; filename="{report_name}.csv"'
             response['Content-Disposition'] = file_name
             writer = csv.writer(response)
-            writer.writerow(["ID", "Sale Date", "Item Sold",
-                            "Unit Price", "Quantity", "Sales Total"])
-            product_sales_values = product_sales_export.values_list(
-                'id', 'created__date', 'item__name', 'unit_price', 'total_quantity', 'total_price')
+            writer.writerow(["ID", "Sale Date", "Item Sold", "Unit Price", "Quantity", "Sales Total"])
+            product_sales_values = product_sales_export.values_list('id', 'created__date', 'item__name', 'unit_price', 'total_quantity', 'total_price')
 
+            cummulative_total = sum(list(product_sales_export.values_list("total_price", flat=True)))
             for sale in product_sales_values:
                 writer.writerow(sale)
+            writer.writerow(["", "", "", "", "", "", ""])
+            writer.writerow(["Total Sales", "", "", "", "", "", cummulative_total])
             return response
 
     paginator = Paginator(product_sales, 15)
@@ -183,8 +185,12 @@ def monthly_sales(request):
             monthly_sales_values = monthly_sales_export.values_list(
                 'id', 'created__date', 'item__name', 'unit_price', 'total_quantity', 'total_price')
 
+            cummulative_total = sum(list(monthly_sales_export.values_list("total_price", flat=True)))
             for sale in monthly_sales_values:
                 writer.writerow(sale)
+            
+            writer.writerow(["", "", "", "", "", "", ""])
+            writer.writerow(["Total Sales", "", "", "", "", "", cummulative_total])
             return response
 
     paginator = Paginator(monthly_sales, 15)
@@ -294,8 +300,14 @@ def daily_and_weekly_sales(request):
             weekly_sales_values = weekly_and_daily_sales_export.values_list(
                 'id', 'created__date', 'item__name', 'unit_price', 'total_quantity', 'total_price')
 
+
+            cummulative_total = sum(list(weekly_and_daily_sales_export.values_list("total_price", flat=True)))
+
             for sale in weekly_sales_values:
                 writer.writerow(sale)
+
+            writer.writerow(["", "", "", "", "", "", ""])
+            writer.writerow(["Total Sales", "", "", "", "", "", cummulative_total])
             return response
 
         print(
@@ -311,3 +323,185 @@ def daily_and_weekly_sales(request):
         "items": items
     }
     return render(request, "reports/weekly_sales.html", context)
+
+
+def general_sales_report(request):
+    orders = Order.objects.all().order_by("-created")
+
+    sellers = User.objects.filter(role="cashier")
+
+    if request.method == "POST":
+
+        # Filter Data
+        sold_by = request.POST.get("sold_by")
+        sale_type = request.POST.get("sale_type")
+        sales_from = request.POST.get("sales_from")
+        sales_to = request.POST.get("sales_to")
+        action_type = request.POST.get("action_type")
+
+        # Download Filters
+        served_by = request.POST.get("served_by")
+        sales_from_date = request.POST.get("sales_from_date")
+        sales_to_date = request.POST.get("sales_to_date")
+        order_type = request.POST.get("order_type")
+
+        
+
+        filter_object = {
+            'sold_by': sold_by,
+            'sale_type': sale_type,
+            'sales_from': sales_from,
+            'sales_to': sales_to
+        }
+
+        request.session['filter_object'] = filter_object
+
+        if sales_from:
+            if isinstance(sales_from, str):
+                sales_from = datetime.strptime(sales_from, "%Y-%m-%d").date()
+
+        if sales_to:
+            if isinstance(sales_to, str):
+                sales_to = datetime.strptime(sales_to, "%Y-%m-%d").date()
+
+        if sold_by and sale_type and sales_from and sales_to:
+            orders = Order.objects.filter(order_type=sale_type, served_by__id=sold_by).filter(
+                created__date__gte=sales_from
+            ).filter(created__date__lte=sales_to)
+
+        elif sold_by and sale_type and sales_from:
+            orders = Order.objects.filter(order_type=sale_type, served_by__id=sold_by).filter(
+                created__date=sales_from
+            )
+
+        elif sold_by and sale_type and sales_to:
+            orders = Order.objects.filter(order_type=sale_type, served_by__id=sold_by).filter(
+                created__date=sales_to
+            )
+
+        elif sold_by and sales_from and sales_to:
+            orders = Order.objects.filter(served_by__id=sold_by).filter(
+                created__date__gte=sales_from
+            ).filter(created__date__lte=sales_to)
+
+        elif sold_by and sale_type:
+            orders = Order.objects.filter(order_type=sale_type, served_by__id=sold_by)
+
+        elif sold_by and sales_from:
+            orders = Order.objects.filter(served_by__id=sold_by).filter(
+                created__date=sales_from
+            )
+
+        elif sold_by and sales_to:
+            orders = Order.objects.filter(served_by__id=sold_by).filter(
+                created__date=sales_to
+            )
+        
+        elif sales_from and sales_to:
+            orders = Order.objects.filter(created__date__gte=sales_from).filter(created__date__lte=sales_to)
+
+        elif sold_by:
+            orders = Order.objects.filter(served_by__id=sold_by)
+
+        elif sale_type:
+            orders = Order.objects.filter(order_type=sale_type)
+
+        elif sales_from:
+            orders = Order.objects.filter(created__date=sales_from)
+
+        elif sales_to:
+            orders = Order.objects.filter(created__date=sales_to)
+
+        if action_type == "export":
+            orders_export = Order.objects.all().order_by("-created")
+
+            print(f"Sold By: {served_by}, Sale Type: {order_type}, From: {sales_from_date}, To: {sales_to_date}")
+
+
+            if sales_from_date:
+                if isinstance(sales_from_date, str):
+                    sales_from_date = datetime.strptime(sales_from_date, "%Y-%m-%d").date()
+
+            
+            if sales_to_date:
+                if isinstance(sales_to_date, str):
+                    sales_to_date = datetime.strptime(sales_to_date, "%Y-%m-%d").date()
+
+
+            if served_by and order_type and sales_from_date and sales_to_date:
+                orders_export = Order.objects.filter(order_type=order_type, served_by__id=served_by).filter(
+                    created__date__gte=sales_from_date
+                ).filter(created__date__lte=sales_to_date)
+
+            elif served_by and order_type and sales_from_date:
+                orders_export = Order.objects.filter(order_type=order_type, served_by__id=served_by).filter(
+                    created__date=sales_from_date
+                )
+
+            elif served_by and order_type and sales_to_date:
+                orders_export = Order.objects.filter(order_type=order_type, served_by__id=served_by).filter(
+                    created__date=sales_to_date
+                )
+
+            elif served_by and sales_from_date and sales_to_date:
+                orders_export = Order.objects.filter(served_by__id=served_by).filter(
+                    created__date__gte=sales_from_date
+                ).filter(created__date__lte=sales_to_date)
+
+            elif served_by and order_type:
+                orders_export = Order.objects.filter(order_type=order_type, served_by__id=served_by)
+
+            elif served_by and sales_from_date:
+                orders_export = Order.objects.filter(served_by__id=served_by).filter(
+                    created__date=sales_from_date
+                )
+
+            elif served_by and sales_to_date:
+                orders_export = Order.objects.filter(served_by__id=served_by).filter(
+                    created__date=sales_to_date
+                )
+            
+            elif sales_from_date and sales_to_date:
+                orders_export = Order.objects.filter(created__date__gte=sales_from_date).filter(created__date__lte=sales_to_date)
+
+            elif served_by:
+                orders_export = Order.objects.filter(served_by__id=served_by)
+
+            elif order_type:
+                orders_export = Order.objects.filter(order_type=order_type)
+
+            elif sales_from_date:
+                orders_export = Order.objects.filter(created__date=sales_from_date)
+
+            elif sales_to_date:
+                orders_export = Order.objects.filter(created__date=sales_to_date)
+
+
+            response = HttpResponse(content_type='text/csv')
+            file_name = f'attachment; filename="Sales Report.csv"'
+            response['Content-Disposition'] = file_name
+            writer = csv.writer(response)
+            writer.writerow(["ID", "Sale Date", "Sold By", "Order Type", "Sales Total"])
+            orders_export_values = orders_export.values_list('id', 'created__date', 'served_by__username', 'order_type', 'total_cost')
+
+            cummulative_total = sum(list(orders_export.values_list("total_cost", flat=True)))
+
+            for sale in orders_export_values:
+                writer.writerow(sale)
+
+            writer.writerow(["", "", "", "", ""])
+            writer.writerow(["Total Sales", "", "", "", cummulative_total])
+            return response
+
+        #return redirect("general-sales-report")
+
+    paginator = Paginator(orders, 15)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "orders": orders,
+        "page_obj": page_obj,
+        "sellers": sellers
+    }
+    return render(request, "reports/general_sales.html", context)

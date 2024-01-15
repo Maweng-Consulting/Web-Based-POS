@@ -1,5 +1,5 @@
 {% load static %}
-{% load table_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,10 +45,23 @@
  
     <div class="col">
         <div class="row">
+          <h3 class="text-center">Cart Items</h3>
+          <hr>
           <div class="col">
-            <h3 class="text-center">Cart Items</h3>
+
+            <form method="POST">
+              {% csrf_token %}
+              <select class="select2 form-select" id="customer_id" name="customer_id" onchange="recordSelection()">
+                <option value="" disabled selected>{{selected_customer.name}}</option>
+                {% for customer in customers %}
+                  <option value="{{customer.id}}">{{customer.name}}</option>
+                {% endfor %}
+              </select>
+            </form>
           </div>
-          <div class="col"></div>
+          <div class="col">
+            <a class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#newCustomerAtPosModal">New Customer</a>
+          </div>
         </div>
         <hr/>
         <div class="table-responsive small">
@@ -111,7 +124,7 @@
                   <td>
                     <b>{{total_cost}}</b>
                   </td>
-                  
+                  {% if selected_customer.is_walkin %}
                   <td>
                     <a href="#" class="btn btn-warning btn-sm">
                       Pay
@@ -122,6 +135,14 @@
                       Paid
                     </a>
                   </td>
+                  {% else %}
+                  <td>
+                    <a href="{% url 'new-credit-order' %}" class="btn btn-warning btn-sm">
+                      Sell On Credit
+                    </a>
+                  </td>
+                  <td></td>
+                  {% endif %}
                   
                 </tr>
                
@@ -203,12 +224,13 @@
   </div>
 </div>
 </div>
+{% include "customers/new_customer_at_pos.html" %}
 
+<script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="{% static 'dashboard.js' %}"></script>
 <script>
-  //$(document).ready(function() {
-  //    $('#my_table').DataTable();
-  //});
-
 const BASE_URL = "http://127.0.0.1:8000"
   
 async function fetchData() {
@@ -295,14 +317,47 @@ function populateTable(data) {
 
 fetchData();
 fetchMpesaPayments();
+$('.select2').select2();
 
+
+function getCSRFToken() {
+    const csrfCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('csrftoken='));
+    if (csrfCookie) {
+        return csrfCookie.split('=')[1];
+    }
+    return null;
+}
+const recordSelection = async() => {
+    var selectedOption = document.getElementById("customer_id");
+    var selectedValue = selectedOption.value;
+    var selectedText = selectedOption.options[selectedOption.selectedIndex].text;
+
+    // You can now do something with the selected value and text
+    console.log("Selected Value: " + selectedValue);
+    console.log("Selected Text: " + selectedText);
+
+    let headersList = {
+        "Accept": "*/*",
+        "Content-Type": "application/json",
+        'X-CSRFToken': getCSRFToken(),
+    }
+
+    let bodyContent = JSON.stringify({
+      "customer_id": selectedValue
+    });
+
+    let response = await fetch("/pos/create-session/", { 
+      method: "POST",
+      body: bodyContent,
+      headers: headersList
+    });
+    
+    let data = await response.text();
+    console.log(data);
+    // You can also perform additional actions or send data to the server using Ajax, etc.
+    window.location.reload()
+}
   </script>
-  
-<script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    <script src="{% static 'dashboard.js' %}"></script>
-
+    
 </body>
 </html>

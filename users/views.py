@@ -213,3 +213,30 @@ def delete_customer(request):
         return redirect("customers")
 
     return render(request, "customers/delete_customer.html")
+
+
+
+def create_customer_at_pos(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        phone_number = request.POST.get("phone_number")
+        id_number = request.POST.get("id_number")
+        gender = request.POST.get("gender")
+        address = request.POST.get("address")
+        city = request.POST.get("city")
+        country = request.POST.get("country")
+
+        customer = Customer.objects.create(
+            name=name,
+            email=email,
+            phone_number=phone_number,
+            id_number=id_number,
+            gender=gender,
+            address=address,
+            city=city,
+            country=country
+        )
+        return redirect("sales-point")
+        
+    return render(request, "customers/new_customer_at_pos.html")

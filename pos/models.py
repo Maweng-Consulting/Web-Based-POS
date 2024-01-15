@@ -16,6 +16,7 @@ PAYMENT_METHODS = (
     ("Mpesa", "Mpesa"),
     ("Cash", "Cash"),
     ("Wallet", "Wallet"),
+    ("Credit", "Credit"),
 )
 
 ORDER_TYPES = (
@@ -24,6 +25,7 @@ ORDER_TYPES = (
 )
 
 class Order(AbstractBaseModel):
+    customer = models.ForeignKey("users.Customer", on_delete=models.SET_NULL, null=True)
     total_cost = models.DecimalField(max_digits=20, decimal_places=2)
     status = models.CharField(max_length=255, choices=ORDER_STATUS_CHOICES)
     served_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
@@ -46,6 +48,8 @@ class Order(AbstractBaseModel):
 
 
 class OrderItem(AbstractBaseModel):
+    user = models.ForeignKey("users.User", on_delete=models.SET_NULL, null=True)
+    cashier_id = models.IntegerField(null=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="orderitems")
     item = models.ForeignKey("inventory.Inventory", on_delete=models.SET_NULL, null=True)
     quantity = models.FloatField(default=0)
@@ -54,6 +58,7 @@ class OrderItem(AbstractBaseModel):
 
 class TemporaryCustomerCartItem(AbstractBaseModel):
     user = models.ForeignKey("users.User", on_delete=models.SET_NULL, null=True)
+    customer = models.ForeignKey("users.Customer", on_delete=models.SET_NULL, null=True)
     cashier_id = models.IntegerField(null=True)
     item = models.ForeignKey("inventory.Inventory", on_delete=models.CASCADE)
     quantity = models.FloatField(default=0)

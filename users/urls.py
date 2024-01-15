@@ -1,8 +1,8 @@
 from django.urls import path
 
-from users.views import (customers, delete_customer, delete_staff,
-                         edit_customer, edit_staff, new_customer, register,
-                         staff, user_login, user_logout)
+from users.views import (create_customer_at_pos, customers, delete_customer,
+                         delete_staff, edit_customer, edit_staff, new_customer,
+                         register, staff, user_login, user_logout)
 
 urlpatterns = [
     path("login/", user_login, name="login"),
@@ -16,4 +16,5 @@ urlpatterns = [
     path("new-customer/", new_customer, name="new-customer"),
     path("edit-customer/", edit_customer, name="edit-customer"),
     path("delete-customer/", delete_customer, name="delete-customer"),
+    path("new-customer-at-pos/", create_customer_at_pos, name="new-customer-at-pos"),
 ]

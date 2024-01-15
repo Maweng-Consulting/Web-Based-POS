@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import redirect, render
 
-from inventory.models import Inventory, InventoryLog
+from inventory.models import Inventory, InventoryLog, Purchase
 from suppliers.models import Supplier, SupplyLog
 
 
@@ -191,3 +191,45 @@ def take_out_stock(request):
         return redirect("inventory")
 
     return render(request, "inventory/restock.html")
+
+
+def purchases(request):
+    purchases = Purchase.objects.all().order_by("-created")
+
+    paginator = Paginator(purchases, 15)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    suppliers = Supplier.objects.all()
+
+    context = {
+        "page_obj": page_obj,
+        "purchases": purchases,
+        "suppliers": suppliers
+    }
+
+    return render(request, "purchases/purchases.html", context)
+
+
+def new_purchase(request):
+    if request.method == "POST":
+        recorded_by = request.POST.get("recorded_by")
+        supplier_id = request.POST.get("supplier_id")
+        cost = Decimal(request.POST.get("cost"))
+        amount_paid = Decimal(request.POST.get("amount_paid"))
+        purchase_type = request.POST.get("purchase_type")
+
+        purchase = Purchase.objects.create(
+            recorded_by_id=recorded_by,
+            supplier_id=supplier_id,
+            cost=cost,
+            amount_paid=amount_paid,
+            purchase_type=purchase_type
+        )
+        return redirect("purchases")
+
+    return render(request, "purchases/new_purchase.html")
+
+
+def pay_purchase(request):
+    pass
