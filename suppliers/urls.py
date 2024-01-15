@@ -1,7 +1,12 @@
 from django.urls import path
 
-from suppliers.views import (delete_supplier, edit_supplier, new_supplier,
-                             supplier_details, suppliers)
+from suppliers.views import (
+    delete_supplier,
+    edit_supplier,
+    new_supplier,
+    supplier_details,
+    suppliers,
+)
 
 urlpatterns = [
     path("", suppliers, name="suppliers"),

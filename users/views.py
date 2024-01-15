@@ -11,7 +11,7 @@ from users.models import Customer, User
 # Create your views here.
 @login_required(login_url="/users/login/")
 def register(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         username = request.POST.get("username")
         email = request.POST.get("email")
         first_name = request.POST.get("first_name")
@@ -27,11 +27,14 @@ def register(request):
 
         if user_by_email:
             messages.error(
-                request, f"User with this email exists already, try a different email!!")
+                request, f"User with this email exists already, try a different email!!"
+            )
 
         elif user_by_username:
             messages.error(
-                request, f"User with this username exists already, try a different username!!")
+                request,
+                f"User with this username exists already, try a different username!!",
+            )
 
             print(username, email, first_name, last_name)
         else:
@@ -44,20 +47,23 @@ def register(request):
                 gender=gender,
                 phone_number=phone_number,
                 id_number=id_number,
-                position=position
+                position=position,
             )
             user.set_password("1234")
             user.save()
             messages.success(request, f"User created successfully!!")
 
-            return redirect('staff')
+            return redirect("staff")
 
-    return render(request, 'accounts/new_staff.html',)
+    return render(
+        request,
+        "accounts/new_staff.html",
+    )
 
 
 @login_required(login_url="/users/login/")
 def edit_staff(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         user_id = request.POST.get("user_id")
         if user_id:
             username = request.POST.get("username")
@@ -83,9 +89,12 @@ def edit_staff(request):
             user.save()
             messages.success(request, f"User created successfully!!")
 
-        return redirect('staff')
+        return redirect("staff")
 
-    return render(request, 'accounts/edit_staff.html',)
+    return render(
+        request,
+        "accounts/edit_staff.html",
+    )
 
 
 @login_required(login_url="/users/login/")
@@ -97,28 +106,29 @@ def delete_staff(request):
             staff.delete()
             return redirect("staff")
         else:
-            return messages.error(request, f"Staff with id: {user_id} does not exist on the database")
+            return messages.error(
+                request, f"Staff with id: {user_id} does not exist on the database"
+            )
     return render(request, "accounts/delete_staff.html")
 
 
 def user_login(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            
             request.session["cashier_id"] = user.id
 
             login(request, user)
-            return redirect('home')
-    return render(request, 'accounts/login.html')
+            return redirect("home")
+    return render(request, "accounts/login.html")
 
 
 @login_required(login_url="/users/login/")
 def user_logout(request):
     logout(request)
-    return redirect('login')
+    return redirect("login")
 
 
 @login_required(login_url="/users/login/")
@@ -132,10 +142,7 @@ def staff(request):
     paginator = Paginator(staffs, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    context = {
-        "staffs": staffs,
-        "page_obj": page_obj
-    }
+    context = {"staffs": staffs, "page_obj": page_obj}
     return render(request, "accounts/staff.html", context)
 
 
@@ -146,10 +153,7 @@ def customers(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    context = {
-        "page_obj": page_obj,
-        "customers": customers
-    }
+    context = {"page_obj": page_obj, "customers": customers}
     return render(request, "customers/customers.html", context)
 
 
@@ -172,10 +176,10 @@ def new_customer(request):
             gender=gender,
             address=address,
             city=city,
-            country=country
+            country=country,
         )
         return redirect("customers")
-        
+
     return render(request, "customers/new_customer.html")
 
 
@@ -215,7 +219,6 @@ def delete_customer(request):
     return render(request, "customers/delete_customer.html")
 
 
-
 def create_customer_at_pos(request):
     if request.method == "POST":
         name = request.POST.get("name")
@@ -235,8 +238,8 @@ def create_customer_at_pos(request):
             gender=gender,
             address=address,
             city=city,
-            country=country
+            country=country,
         )
         return redirect("sales-point")
-        
+
     return render(request, "customers/new_customer_at_pos.html")

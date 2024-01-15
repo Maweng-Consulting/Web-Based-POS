@@ -4,7 +4,7 @@ class CashierMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        cashier_id = request.session.get('cashier_id')
+        cashier_id = request.session.get("cashier_id")
         if cashier_id:
             request.current_cashier = cashier_id
         else:

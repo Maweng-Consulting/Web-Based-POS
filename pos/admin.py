@@ -11,7 +11,17 @@ class TemporaryCustomerCartItemAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ["id", "order_date", "order_time", "served_by", "total_cost", "status", "order_type", "payment_method"]
+    list_display = [
+        "id",
+        "order_date",
+        "order_time",
+        "served_by",
+        "total_cost",
+        "status",
+        "order_type",
+        "payment_method",
+    ]
+
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
