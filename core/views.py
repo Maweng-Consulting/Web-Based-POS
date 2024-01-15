@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from pos.models import Order
 from users.models import Customer, User
@@ -17,6 +17,10 @@ seven_days_ago = now - timedelta(days=7)
 # Create your views here.
 @login_required(login_url="/users/login/")
 def home(request):
+
+    if request.user.role == "cashier":
+        return redirect("inventory")
+
     customers_count = Customer.objects.all().count()
     staff_count = User.objects.exclude(role__in=["Supplier", "Broker"]).count()
 

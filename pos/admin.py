@@ -6,7 +6,7 @@ from .models import CreditOrder, Order, OrderItem, TemporaryCustomerCartItem
 # Register your models here.
 @admin.register(TemporaryCustomerCartItem)
 class TemporaryCustomerCartItemAdmin(admin.ModelAdmin):
-    list_display = ["user", "cashier_id", "item", "quantity", "price"]
+    list_display = ["user", "cashier_id", "item", "quantity", "price", "customer"]
 
 
 @admin.register(Order)

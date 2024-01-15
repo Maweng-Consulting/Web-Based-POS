@@ -53,6 +53,8 @@
               <td>{{stock.quantity}} {{stock.unit_of_measure}}</td>
               <td>{{stock.buying_price}}</td>
               <td>{{stock.selling_price}}</td>
+
+              {% if request.user.role == "admin" %}
               
               <td><a class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#editStockItemModal{{ stock.id }}">
                 <i class="bi bi-pencil-square"></i>
@@ -70,6 +72,7 @@
             <td><a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteStockItemModal{{ stock.id }}">
                 <i class="bi bi-trash"></i>
               </a></td>
+            {% endif %}
               
             </tr>
            {% include "inventory/edit_stock_item.html" %}

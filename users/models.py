@@ -46,3 +46,7 @@ class Customer(AbstractBaseModel):
 
     def __str__(self):
         return self.name
+
+    @property
+    def is_walk_in(self):
+        return True if self.name in ["Walk In Customer", "Walk-In Customer"] else False
