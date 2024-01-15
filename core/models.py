@@ -5,11 +5,11 @@ from django.utils import timezone
 
 date_today = timezone.now()
 
+
 # Create your models here.
 class AbstractBaseModel(models.Model):
     created = models.DateTimeField(default=timezone.now)
     modified = models.DateTimeField(default=timezone.now)
-
 
     class Meta:
         abstract = True

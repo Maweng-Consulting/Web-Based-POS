@@ -22,16 +22,11 @@ def invoices(request):
             Q(supplier__name__icontains=search_text)
         ).order_by("-created")
 
-
     paginator = Paginator(invoices, 12)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    context = {
-        "page_obj": page_obj,
-        "invoices": invoices,
-        "suppliers": suppliers
-    }
+    context = {"page_obj": page_obj, "invoices": invoices, "suppliers": suppliers}
     return render(request, "payments/invoices.html", context)
 
 
@@ -50,13 +45,11 @@ def new_invoice(request):
             amount_expected=amount_expected,
             date_supplied=date_supplied,
             date_due=date_due,
-            status="Review"
+            status="Review",
         )
 
         invoice_log = SupplyInvoiceLog.objects.create(
-            invoice=invoice,
-            actioned_by=user,
-            action="New invoice created"
+            invoice=invoice, actioned_by=user, action="New invoice created"
         )
 
         return redirect("invoices")
@@ -94,7 +87,7 @@ def edit_invoice(request):
         invoice_log = SupplyInvoiceLog.objects.create(
             invoice=invoice,
             actioned_by=user,
-            action=f"Invoice status changed from {initial_invoice_status} to {new_invoice_status}"
+            action=f"Invoice status changed from {initial_invoice_status} to {new_invoice_status}",
         )
 
         return redirect("invoices")
@@ -122,7 +115,7 @@ def pay_invoice(request):
         invoice_log = SupplyInvoiceLog.objects.create(
             invoice=invoice,
             actioned_by=user,
-            action=f"Invoice status changed from {initial_invoice_status} to {new_invoice_status}"
+            action=f"Invoice status changed from {initial_invoice_status} to {new_invoice_status}",
         )
         return redirect("invoices")
 

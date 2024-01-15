@@ -3,9 +3,9 @@
 
 {% block additional_css %}
 
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <style>
   .select2-container .select2-selection--single{
   height:34px !important;
@@ -29,10 +29,9 @@
     <div class="col-8">
       <form method="POST">
         {% csrf_token %}
-        
           <div class="row">
             <div class="col-5">
-              <select class="select2 form-select" name="product_name" id="product_name" onchange="getDates()">
+              <select class="select2 form-select" name="product_value" id="product_value" onchange="getSearchValues()">
                 <option value="">---</option>
                 {% for item in items %}
                   <option value="{{item.name}}">{{item.name}}</option>
@@ -41,7 +40,7 @@
             </div>
 
             <div class="col-3">
-              <select class="form-select" id="month_value" name="month_value" onchange="getDates()">
+              <select class="form-select" id="month_value" name="month_value" onchange="getSearchValues()">
                 <option value=""></option>  
                 <option value="1">January</option>
                   <option value="2">February</option>
@@ -58,7 +57,7 @@
               </select>
             </div>
           <div class="col-2">
-              <select class="form-select" id="year_value" name="year_value" onchange="getDates()">
+              <select class="form-select" id="year_value" name="year_value" onchange="getSearchValues()">
                 <option value=""></option>  
                 <option value="2024">2024</option>
                   <option value="2025">2025</option>
@@ -164,11 +163,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
 <script>
- $('.select2').select2();
+ $('.select2').select2()
 
-  const getDates = async () => {
+const getSearchValues = async () => {
     console.log("Form Filltered!!!!!!!!!")
-    var product = document.getElementById("product_name");
+    var product = document.getElementById("product_value");
     var productValue = product.value;
 
     var month = document.getElementById("month_value");
@@ -178,7 +177,7 @@
     var yearValue = year.value;
 
     if (productValue || monthValue || yearValue) {
-      sessionStorage.setItem("product_name", productValue)
+      sessionStorage.setItem("product_value", productValue)
       sessionStorage.setItem("month_value", monthValue)
       sessionStorage.setItem("year_value", yearValue)
     }

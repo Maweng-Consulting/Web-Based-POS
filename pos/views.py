@@ -36,7 +36,6 @@ class MpesaPaymentAPIView(generics.ListCreateAPIView):
     serializer_class = MpesaPaymentSerializer
 
 
-
 def orders(request):
     orders = Order.objects.all().order_by("-created")
 
@@ -48,31 +47,27 @@ def orders(request):
 
         if search_text and sale_type:
             orders = Order.objects.filter(
-                Q(served_by__first_name__icontains=search_text) |  
-                Q(served_by__last_name__icontains=search_text) |
-                Q(status__icontains=search_text) |
-                Q(id__icontains=search_text)
+                Q(served_by__first_name__icontains=search_text)
+                | Q(served_by__last_name__icontains=search_text)
+                | Q(status__icontains=search_text)
+                | Q(id__icontains=search_text)
             ).filter(order_type=sale_type)
 
         elif search_text:
             orders = Order.objects.filter(
-                Q(served_by__first_name__icontains=search_text) |  
-                Q(served_by__last_name__icontains=search_text) |
-                Q(status__icontains=search_text) |
-                Q(id__icontains=search_text)
+                Q(served_by__first_name__icontains=search_text)
+                | Q(served_by__last_name__icontains=search_text)
+                | Q(status__icontains=search_text)
+                | Q(id__icontains=search_text)
             )
         elif sale_type:
             orders = Order.objects.filter(order_type=sale_type)
-
 
     paginator = Paginator(orders, 12)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    context = {
-        "orders": orders,
-        "page_obj": page_obj
-    }
+    context = {"orders": orders, "page_obj": page_obj}
     return render(request, "orders/orders.html", context)
 
 
@@ -82,12 +77,8 @@ def credit_orders(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    context = {
-        "orders": orders,
-        "page_obj": page_obj
-    }
+    context = {"orders": orders, "page_obj": page_obj}
     return render(request, "orders/credit_orders.html", context)
-
 
 
 @login_required(login_url="/users/login/")
@@ -99,12 +90,11 @@ def sales_point(request):
     customer = Customer.objects.get(name="Walk In Customer")
     if not selected_customer:
         request.session[f"selected_customer_{cashier_id}"] = {
-            'id': customer.id,
-            'name': customer.name,
-            'cashier_id': cashier_id if cashier_id else user.id,
-            'is_walkin': customer.is_walk_in
+            "id": customer.id,
+            "name": customer.name,
+            "cashier_id": cashier_id if cashier_id else user.id,
+            "is_walkin": customer.is_walk_in,
         }
-
 
     print(f"Selected Customer: {selected_customer}")
 
@@ -120,7 +110,7 @@ def sales_point(request):
             id=item_id,
             user=user,
             cashier_id=cashier_id,
-            customer_id=selected_customer["id"]
+            customer_id=selected_customer["id"],
         )
 
         if new_amount <= float(temp_item.item.quantity):
@@ -138,7 +128,8 @@ def sales_point(request):
     items = Inventory.objects.all()
 
     cart_items = TemporaryCustomerCartItem.objects.filter(
-        user=user, cashier_id=cashier_id, customer_id=selected_customer["id"])
+        user=user, cashier_id=cashier_id, customer_id=selected_customer["id"]
+    )
 
     total_cost = sum(list(cart_items.values_list("price", flat=True)))
 
@@ -152,7 +143,7 @@ def sales_point(request):
         "cart_items": cart_items,
         "total_cost": total_cost,
         "customers": customers,
-        "selected_customer": selected_customer
+        "selected_customer": selected_customer,
     }
     return render(request, "pos/sale.html", context)
 
@@ -183,7 +174,7 @@ def add_to_cart(request, item_id=None):
             item=item,
             quantity=1,
             price=item.selling_price,
-            customer_id=selected_customer["id"]
+            customer_id=selected_customer["id"],
         )
         temp_item.item.quantity -= 1
         temp_item.item.save()
@@ -197,9 +188,7 @@ def remove_from_cart(request, item_id=None):
     selected_customer = request.session.get(f"selected_customer_{cashier_id}", {})
 
     temp_item = TemporaryCustomerCartItem.objects.get(
-        id=item_id,
-        user=user,
-        customer_id=selected_customer["id"]
+        id=item_id, user=user, customer_id=selected_customer["id"]
     )
 
     temp_item.item.quantity += temp_item.quantity
@@ -236,20 +225,30 @@ def mark_order_as_paid(request, user_id=None):
         payment_method="Cash",
         order_type="Paid",
         total_cost=total_cost,
-        customer_id=selected_customer["id"]
+        customer_id=selected_customer["id"],
     )
 
     order_items = []
-    
+
     for temp_item in temp_items:
-        order_items.append(OrderItem(order=order, item=temp_item.item,
-                           quantity=temp_item.quantity, price=temp_item.price, cashier_id=cashier_id))
+        order_items.append(
+            OrderItem(
+                order=order,
+                item=temp_item.item,
+                quantity=temp_item.quantity,
+                price=temp_item.price,
+                cashier_id=cashier_id,
+            )
+        )
 
     items = OrderItem.objects.bulk_create(order_items)
 
-    
     for order_item in items:
-        product_sale = ProductSale.objects.filter(item=order_item.item).filter(created__date=date_today).first()
+        product_sale = (
+            ProductSale.objects.filter(item=order_item.item)
+            .filter(created__date=date_today)
+            .first()
+        )
 
         if product_sale:
             product_sale.total_quantity += order_item.quantity
@@ -257,17 +256,16 @@ def mark_order_as_paid(request, user_id=None):
             product_sale.save()
         else:
             ProductSale.objects.create(
-                order=order, 
-                item=order_item.item, 
-                total_price=order_item.price, 
+                order=order,
+                item=order_item.item,
+                total_price=order_item.price,
                 total_quantity=order_item.quantity,
-                unit_price=order_item.item.selling_price
+                unit_price=order_item.item.selling_price,
             )
-    
-    temp_items.delete()
-    del request.session[f'selected_customer_{cashier_id}']
-    return redirect("sales-point")
 
+    temp_items.delete()
+    del request.session[f"selected_customer_{cashier_id}"]
+    return redirect("sales-point")
 
 
 @login_required(login_url="/users/login/")
@@ -275,14 +273,12 @@ def increase_order_item_quantity(request, item_id=None, user_id=None):
     user = User.objects.get(id=user_id)
     cashier_id = request.session.get("cashier_id")
     temp_item = TemporaryCustomerCartItem.objects.get(
-        id=item_id,
-        user=user,
-        cashier_id=cashier_id
+        id=item_id, user=user, cashier_id=cashier_id
     )
     temp_item.quantity += 1
     temp_item.price += temp_item.item.price
     temp_item.save()
-    
+
     return redirect("sales-point")
 
 
@@ -291,9 +287,7 @@ def decrease_order_item_quantity(request, item_id=None, user_id=None):
     user = User.objects.get(id=user_id)
     cashier_id = request.session.get("cashier_id")
     temp_item = TemporaryCustomerCartItem.objects.get(
-        id=item_id,
-        user=user,
-        cashier_id=cashier_id
+        id=item_id, user=user, cashier_id=cashier_id
     )
     if temp_item.quantity == 0:
         temp_item.quantity = 0
@@ -304,6 +298,7 @@ def decrease_order_item_quantity(request, item_id=None, user_id=None):
         temp_item.save()
     return redirect("sales-point")
 
+
 def update_cart_items(request, item_id=None, user_id=None):
     user = User.objects.get(id=user_id)
     cashier_id = request.session.get("cashier_id")
@@ -312,9 +307,7 @@ def update_cart_items(request, item_id=None, user_id=None):
         new_amount = int(request.POST.get("new_amount"))
 
         temp_item = TemporaryCustomerCartItem.objects.get(
-            id=item_id,
-            user=user,
-            cashier_id=cashier_id
+            id=item_id, user=user, cashier_id=cashier_id
         )
 
         if new_amount <= temp_item.item.quantity:
@@ -323,19 +316,15 @@ def update_cart_items(request, item_id=None, user_id=None):
             temp_item.save()
         else:
             return redirect("sales-point")
-        
+
     return redirect("sales-point")
 
 
 def print_order_receipt(request, order_id=None):
     order = Order.objects.get(id=order_id)
     order_items = order.items
-    context = {
-        "order": order,
-        "order_items": order_items
-    }
+    context = {"order": order, "order_items": order_items}
     return render(request, "receipts/order.html", context)
-
 
 
 @login_required(login_url="/users/login/")
@@ -358,20 +347,30 @@ def new_credit_order(request):
         payment_method="Credit",
         order_type="Credit",
         total_cost=total_cost,
-        customer_id=selected_customer["id"]
+        customer_id=selected_customer["id"],
     )
 
     order_items = []
-    
+
     for temp_item in temp_items:
-        order_items.append(OrderItem(order=order, item=temp_item.item,
-                           quantity=temp_item.quantity, price=temp_item.price, cashier_id=cashier_id))
+        order_items.append(
+            OrderItem(
+                order=order,
+                item=temp_item.item,
+                quantity=temp_item.quantity,
+                price=temp_item.price,
+                cashier_id=cashier_id,
+            )
+        )
 
     items = OrderItem.objects.bulk_create(order_items)
 
-    
     for order_item in items:
-        product_sale = ProductSale.objects.filter(item=order_item.item).filter(created__date=date_today).first()
+        product_sale = (
+            ProductSale.objects.filter(item=order_item.item)
+            .filter(created__date=date_today)
+            .first()
+        )
 
         if product_sale:
             product_sale.total_quantity += order_item.quantity
@@ -379,16 +378,17 @@ def new_credit_order(request):
             product_sale.save()
         else:
             ProductSale.objects.create(
-                order=order, 
-                item=order_item.item, 
-                total_price=order_item.price, 
+                order=order,
+                item=order_item.item,
+                total_price=order_item.price,
                 total_quantity=order_item.quantity,
-                unit_price=order_item.item.selling_price
+                unit_price=order_item.item.selling_price,
             )
-    
+
     temp_items.delete()
-    del request.session[f'selected_customer_{cashier_id}']
+    del request.session[f"selected_customer_{cashier_id}"]
     return redirect("sales-point")
+
 
 @login_required(login_url="/users/login/")
 def credit_sales_point(request):
@@ -402,9 +402,7 @@ def credit_sales_point(request):
         print(f"Item ID: {item_id}, New Amount: {new_amount}")
 
         temp_item = TemporaryCustomerCartItem.objects.get(
-            id=item_id,
-            user=user,
-            cashier_id=cashier_id
+            id=item_id, user=user, cashier_id=cashier_id
         )
 
         if new_amount <= float(temp_item.item.quantity):
@@ -422,7 +420,8 @@ def credit_sales_point(request):
     items = Inventory.objects.all()
 
     cart_items = TemporaryCustomerCartItem.objects.filter(
-        user=user, cashier_id=cashier_id)
+        user=user, cashier_id=cashier_id
+    )
 
     total_cost = sum(list(cart_items.values_list("price", flat=True)))
 
@@ -435,6 +434,6 @@ def credit_sales_point(request):
         "page_obj": page_obj,
         "cart_items": cart_items,
         "total_cost": total_cost,
-        "customers": customers
+        "customers": customers,
     }
     return render(request, "pos/credit_sale.html", context)

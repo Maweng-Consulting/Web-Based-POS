@@ -20,7 +20,9 @@ class Supplier(AbstractBaseModel):
 
 class SupplyLog(AbstractBaseModel):
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True)
-    item = models.ForeignKey("inventory.Inventory", on_delete=models.SET_NULL, null=True)
+    item = models.ForeignKey(
+        "inventory.Inventory", on_delete=models.SET_NULL, null=True
+    )
     quantity = models.IntegerField(default=0)
     unit_price = models.DecimalField(max_digits=100, decimal_places=2, default=0)
     supply_cost = models.DecimalField(max_digits=100, decimal_places=2, default=0)

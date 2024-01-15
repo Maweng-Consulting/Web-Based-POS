@@ -16,21 +16,18 @@ def suppliers(request):
     if request.method == "POST":
         search_text = request.POST.get("search_text")
         suppliers = Supplier.objects.filter(
-            Q(name__icontains=search_text) |
-            Q(user__first_name__icontains=search_text) |
-            Q(user__last_name__icontains=search_text) |
-            Q(city__icontains=search_text) |
-            Q(country__icontains=search_text)
+            Q(name__icontains=search_text)
+            | Q(user__first_name__icontains=search_text)
+            | Q(user__last_name__icontains=search_text)
+            | Q(city__icontains=search_text)
+            | Q(country__icontains=search_text)
         ).order_by("-created")
 
     paginator = Paginator(suppliers, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    context = {
-        "suppliers": suppliers,
-        "page_obj": page_obj
-    }
+    context = {"suppliers": suppliers, "page_obj": page_obj}
     return render(request, "suppliers/suppliers.html", context)
 
 
@@ -62,7 +59,7 @@ def new_supplier(request):
             role="Supplier",
             gender=gender,
             phone_number=phone_number,
-            id_number=id_number
+            id_number=id_number,
         )
         user.set_password(id_number)
         user.save()
@@ -75,7 +72,7 @@ def new_supplier(request):
             supplies=supplies,
             address=address,
             city=city,
-            country=country
+            country=country,
         )
         return redirect("suppliers")
 
@@ -147,7 +144,5 @@ def delete_supplier(request):
 @login_required(login_url="/users/login/")
 def supplier_details(request, supplier_id=None):
     supplier = Supplier.objects.get(id=supplier_id)
-    context = {
-        "supplier": supplier
-    }
+    context = {"supplier": supplier}
     return render(request, "suppliers/supplier_details.html", context)

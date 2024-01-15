@@ -14,6 +14,7 @@ ROLE_CHOICES = (
     ("Supplier", "Supplier"),
 )
 
+
 class User(AbstractUser, AbstractBaseModel):
     role = models.CharField(choices=ROLE_CHOICES, max_length=32, null=True)
     phone_number = models.CharField(max_length=255, null=True)
@@ -24,15 +25,15 @@ class User(AbstractUser, AbstractBaseModel):
     def __str__(self):
         if self.first_name and self.last_name:
             return f"{self.first_name} {self.last_name}"
-        else: 
+        else:
             return self.username
-            
 
     def name(self):
         if not self.first_name and self.last_name:
             return self.username
-        else: 
+        else:
             return f"{self.first_name} {self.last_name}"
+
 
 class Customer(AbstractBaseModel):
     name = models.CharField(max_length=255)

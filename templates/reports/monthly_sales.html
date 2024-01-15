@@ -1,26 +1,26 @@
 {% extends "base.html" %}
 
+{% block additional_css %}
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<style>
+  .select2-container .select2-selection--single{
+  height:34px !important;
+}
+.select2-container--default .select2-selection--single{
+       border: 1px solid #ccc !important; 
+
+}
+</style>
+
+{% endblock additional_css %}
+
 {% block content %}
 <div class="row">
-    <div class="col-6">
-        <h3>Monthly Sales</h3>
-    </div>
-    <div class="col-6">
-      <form method="POST">
-        {% csrf_token %}
-        <div class="input-group mb-3">
-          <div class="row">
-            <div class="col-7">
-              <input type="text" class="form-control" name="search_text" id="search_text" placeholder="Product...">
-            </div>
-            
-            <div class="col-5">
-              <button class="btn btn-success">Search</button>
-            </div>
-          </div>
-          
-        </div>
-      </form>
+    <div class="">
+        <h3 class="text-center">Monthly Sales</h3>
     </div>
 </div>
 <hr>
@@ -31,7 +31,15 @@
             
               <div class="row">
                 <div class="col-4">
-                    <select class="form-select" id="month" name="month" onchange="getDates()">
+                  <select class="select2 form-select" name="month_product" id="month_product" onchange="getSearchValues()">
+                    <option value="">---</option>
+                    {% for item in items %}
+                      <option value="{{item.name}}">{{item.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-3">
+                    <select class="form-select" id="month" name="month" onchange="getMonthValues()">
                       <option value=""></option>  
                       <option value="1">January</option>
                         <option value="2">February</option>
@@ -47,8 +55,8 @@
                         <option value="12">December</option>
                     </select>
                   </div>
-                <div class="col-4">
-                    <select class="form-select" id="year" name="year" onchange="getDates()">
+                <div class="col-3">
+                    <select class="form-select" id="year" name="year" onchange="getMonthValues()">
                       <option value=""></option>  
                       <option value="2024">2024</option>
                         <option value="2025">2025</option>
@@ -65,7 +73,7 @@
                     </select>
                 </div>
                 
-                <div class="col-4">
+                <div class="col-2">
                   <button class="btn btn-success">Filter</button>
                 </div>
               </div>
@@ -79,6 +87,9 @@
           <div class="row">
             <div class="col">
               <input type="text" class="form-control" hidden id="action_type" name="action_type" value="export">
+            </div>
+            <div class="col">
+              <input type="text" hidden class="form-control" id="product_name" name="product_name">
             </div>
             <div class="col">
               <input type="text" hidden class="form-control" id="sales_month" name="sales_month">
@@ -143,31 +154,38 @@
       </div>
 {% endblock content %}
 
-
 {% block additional_scripts %}
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script>
+$('.select2').select2()
 
-  const getDates = async () => {
+  const getMonthValues = async () => {
     console.log("Form Filltered!!!!!!!!!")
+
+    var month_product = document.getElementById("month_product");
+    var monthProductValue = month_product.value;
+
     var month = document.getElementById("month");
     var monthValue = month.value;
 
     var year = document.getElementById("year");
     var yearValue = year.value;
 
-    if (year || month) {
+    if (year || month || month_product) {
       sessionStorage.setItem("sales_month", monthValue)
       sessionStorage.setItem("sales_year", yearValue)
+      sessionStorage.setItem("month_product", monthProductValue)
     }
 
-    console.log(`Year: ${yearValue}, Month: ${monthValue}`)
+    console.log(`Product: ${monthProductValue}, Year: ${yearValue}, Month: ${monthValue}`)
   }
 
   function loadFormData() {
     var form = document.getElementById('downloadForm');
     form.elements['sales_month'].value = sessionStorage.getItem('sales_month') || '';
     form.elements['sales_year'].value = sessionStorage.getItem('sales_year') || '';
+    form.elements['product_name'].value = sessionStorage.getItem('month_product') || '';
   }
 
     // Load form data from sessionStorage when the DOM content is loaded

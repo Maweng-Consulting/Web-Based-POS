@@ -5,6 +5,7 @@ from inventory.models import Inventory, MpesaPayment
 
 class InventorySerializer(serializers.ModelSerializer):
     button = serializers.SerializerMethodField()
+
     class Meta:
         model = Inventory
         fields = "__all__"
@@ -15,6 +16,7 @@ class InventorySerializer(serializers.ModelSerializer):
 
 class MpesaPaymentSerializer(serializers.ModelSerializer):
     button = serializers.SerializerMethodField()
+
     class Meta:
         model = MpesaPayment
         fields = "__all__"

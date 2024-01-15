@@ -17,27 +17,25 @@ def stock_logs(request):
     if request.method == "POST":
         search_text = request.POST.get("search_text")
         stock_logs = InventoryLog.objects.filter(
-            Q(item__name__icontains=search_text) | 
-            Q(actioned_by__first_name__icontains=search_text) |
-            Q(actioned_by__last_name__icontains=search_text) 
+            Q(item__name__icontains=search_text)
+            | Q(actioned_by__first_name__icontains=search_text)
+            | Q(actioned_by__last_name__icontains=search_text)
         )
 
     paginator = Paginator(stock_logs, 15)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    context = {
-        "page_obj": page_obj,
-        "stock_logs": stock_logs
-    }
+    context = {"page_obj": page_obj, "stock_logs": stock_logs}
 
     return render(request, "inventory/stock_logs.html", context)
+
 
 @login_required(login_url="/users/login/")
 def inventory(request):
     stock_items = Inventory.objects.all().order_by("-created")
     suppliers = Supplier.objects.all()
-   
+
     if request.method == "POST":
         name = request.POST.get("name")
         stock_items = Inventory.objects.filter(Q(name__icontains=name))
@@ -46,12 +44,9 @@ def inventory(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    context = {
-        "stock_items": stock_items,
-        "page_obj": page_obj,
-        "suppliers": suppliers
-    }
+    context = {"stock_items": stock_items, "page_obj": page_obj, "suppliers": suppliers}
     return render(request, "inventory/inventory.html", context)
+
 
 @login_required(login_url="/users/login/")
 def record_stock(request):
@@ -64,23 +59,21 @@ def record_stock(request):
         unit_of_measure = request.POST.get("unit")
 
         inv = Inventory.objects.create(
-            name = name,
+            name=name,
             quantity=quantity,
             buying_price=buying_price,
             selling_price=selling_price,
-            unit_of_measure=unit_of_measure
+            unit_of_measure=unit_of_measure,
         )
 
         stock_log = InventoryLog.objects.create(
-            actioned_by=user,
-            item=inv,
-            action="New Stock",
-            quantity=quantity
+            actioned_by=user, item=inv, action="New Stock", quantity=quantity
         )
 
         return redirect("inventory")
 
     return render(request, "inventory/new_stock_item.html")
+
 
 @login_required(login_url="/users/login/")
 def edit_stock_item(request):
@@ -102,15 +95,13 @@ def edit_stock_item(request):
         stock_item.save()
 
         stock_log = InventoryLog.objects.create(
-            actioned_by=user,
-            item=stock_item,
-            action="Stock Edit",
-            quantity=quantity
+            actioned_by=user, item=stock_item, action="Stock Edit", quantity=quantity
         )
 
         return redirect("inventory")
 
     return render(request, "inventory/edit_stock_item.html")
+
 
 @login_required(login_url="/users/login/")
 def delete_stock_item(request):
@@ -123,7 +114,7 @@ def delete_stock_item(request):
             actioned_by=user,
             item=stock_item,
             action="Stock Delete",
-            quantity=stock_item.quantity
+            quantity=stock_item.quantity,
         )
 
         stock_item.delete()
@@ -140,7 +131,6 @@ def restock_item(request):
         quantity = float(request.POST.get("quantity"))
         supplier_id = request.POST.get("supplier_id")
         stock_item = Inventory.objects.get(id=stock_id)
-        
 
         stock_item.quantity += quantity
         stock_item.save()
@@ -148,10 +138,7 @@ def restock_item(request):
         supplier = Supplier.objects.get(id=supplier_id)
 
         stock_log = InventoryLog.objects.create(
-            actioned_by=user,
-            item=stock_item,
-            action="New Stock",
-            quantity=quantity
+            actioned_by=user, item=stock_item, action="New Stock", quantity=quantity
         )
 
         supply_cost = Decimal(quantity) * stock_item.buying_price
@@ -162,12 +149,13 @@ def restock_item(request):
             item=stock_item,
             quantity=quantity,
             unit_price=stock_item.buying_price,
-            supply_cost=supply_cost
+            supply_cost=supply_cost,
         )
 
         return redirect("inventory")
 
     return render(request, "inventory/restock.html")
+
 
 @login_required(login_url="/users/login/")
 def take_out_stock(request):
@@ -202,11 +190,7 @@ def purchases(request):
 
     suppliers = Supplier.objects.all()
 
-    context = {
-        "page_obj": page_obj,
-        "purchases": purchases,
-        "suppliers": suppliers
-    }
+    context = {"page_obj": page_obj, "purchases": purchases, "suppliers": suppliers}
 
     return render(request, "purchases/purchases.html", context)
 
@@ -224,7 +208,7 @@ def new_purchase(request):
             supplier_id=supplier_id,
             cost=cost,
             amount_paid=amount_paid,
-            purchase_type=purchase_type
+            purchase_type=purchase_type,
         )
         return redirect("purchases")
 

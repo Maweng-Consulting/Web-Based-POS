@@ -6,7 +6,14 @@ from payments.models import SupplyInvoice, SupplyInvoiceLog
 # Register your models here.
 @admin.register(SupplyInvoice)
 class SupplyInvoiceAdmin(admin.ModelAdmin):
-    list_display = ["supplier", "date_supplied", "date_due", "amount_expected", "amount_paid", "status"]
+    list_display = [
+        "supplier",
+        "date_supplied",
+        "date_due",
+        "amount_expected",
+        "amount_paid",
+        "status",
+    ]
 
 
 @admin.register(SupplyInvoiceLog)
