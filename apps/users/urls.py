@@ -2,12 +2,13 @@ from django.urls import path
 
 from apps.users.views import (create_customer_at_pos, customers,
                               delete_customer, delete_staff, edit_customer,
-                              edit_staff, new_customer, register, staff,
-                              user_login, user_logout)
+                              edit_staff, new_customer, new_staff, register,
+                              staff, user_login, user_logout)
 
 urlpatterns = [
     path("login/", user_login, name="login"),
     path("register/", register, name="register"),
+    path("new-staff/", new_staff, name="new-staff"),
     path("logout/", user_logout, name="logout"),
     path("staff/", staff, name="staff"),
     path("edit-staff/", edit_staff, name="edit-staff"),

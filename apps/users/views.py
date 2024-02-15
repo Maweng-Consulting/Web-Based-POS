@@ -9,8 +9,57 @@ from apps.users.models import Customer, User
 
 
 # Create your views here.
-@login_required(login_url="/users/login/")
 def register(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        gender = request.POST.get("gender")
+        role = request.POST.get("role")
+        phone_number = request.POST.get("phone_number")
+        id_number = request.POST.get("id_number")
+        position = request.POST.get("position")
+
+        user_by_email = User.objects.filter(email=email).first()
+        user_by_username = User.objects.filter(username=username).first()
+
+        if user_by_email:
+            messages.error(
+                request, f"User with this email exists already, try a different email!!"
+            )
+
+        elif user_by_username:
+            messages.error(
+                request,
+                f"User with this username exists already, try a different username!!",
+            )
+
+            print(username, email, first_name, last_name)
+        else:
+            user = User.objects.create(
+                first_name=first_name,
+                last_name=last_name,
+                username=username,
+                email=email,
+                role=role,
+                gender=gender,
+                phone_number=phone_number,
+                id_number=id_number,
+                position=position,
+            )
+            user.set_password("1234")
+            user.save()
+            messages.success(request, f"User created successfully!!")
+
+            return redirect("staff")
+
+    return render(request,"accounts/register.html")
+
+
+
+@login_required(login_url="/users/login/")
+def new_staff(request):
     if request.method == "POST":
         username = request.POST.get("username")
         email = request.POST.get("email")

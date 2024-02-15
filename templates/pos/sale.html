@@ -125,11 +125,8 @@
                     <b>{{total_cost}}</b>
                   </td>
                   {% if selected_customer.is_walkin %}
-                  <td>
-                    
-                  </td>
-                  <td>
-                    <a href="{% url 'mark-order-as-paid' request.user.id %}" class="btn btn-primary">
+                  <td colspan="2">
+                    <a href="{% url 'mark-order-as-paid' request.user.id %}" class="btn btn-info btn-sm">
                       Paid
                     </a>
                   </td>
