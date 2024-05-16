@@ -20,5 +20,5 @@ def load_sample_products():
 
     Inventory.objects.bulk_create(products_list)
     print(
-        "************************Products Created Successfully!!************************"
+        "*******Products Created Successfully!!************"
     )

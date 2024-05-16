@@ -37,7 +37,7 @@
           <div class="row mb-3">
             <div class="col">
               <label for="exampleInputPassword1" class="form-label"
-                >Supplier</label
+                ><b>Supplier</b></label
               >
               <select
                 class="form-select"
@@ -55,7 +55,7 @@
           <div class="row mb-3">
             <div class="col">
               <label for="exampleInputPassword1" class="form-label"
-                >Amount Expected</label
+                ><b>Amount Expected</b></label
               >
               <input
                 type="number"
@@ -64,12 +64,13 @@
                 name="amount_expected"
                 min="0"
                 value="{{invoice.amount_expected}}"
+                readonly
                 required
               />
             </div>
             <div class="col">
               <label for="exampleInputPassword1" class="form-label"
-                >Amount Paid</label
+                ><b>Amount Paid</b></label
               >
               <input
                 type="number"
@@ -87,7 +88,7 @@
           <div class="row mb-3">
             <div class="col">
               <label for="exampleInputPassword1" class="form-label"
-                >Date Supplied</label
+                ><b>Date Supplied</b></label
               >
               <input
                 type="date"
@@ -100,7 +101,7 @@
             </div>
             <div class="col">
               <label for="exampleInputPassword1" class="form-label"
-                >Date Due</label
+                ><b>Date Due</b></label
               >
               <input
                 type="date"
@@ -113,24 +114,40 @@
             </div>
           </div>
 
-          <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label"
-              >Invoice Status</label
-            >
-            <select
-              class="form-select"
-              id="status"
-              name="status"
-              value="{{invoice.status}}"
-            >
-              <option value="Paid">Paid</option>
-              <option value="Paying">Still Paying</option>
-              <option value="Defaulted">Defaulted</option>
-              <option value="Payment Pending">Payment Pending</option>
-              <option value="Cancelled">Cancelled</option>
-              <option value="Review">Reviewing</option>
-            </select>
+          <div class="row mb-3">
+            <div class="col">
+              <label for="exampleInputPassword1" class="form-label"
+                ><b>Current Status</b></label
+              >
+              <input
+                type="text"
+                class="form-control bg-info"
+                value="{{invoice.status}}"
+                required
+                readonly
+              />
+            </div>
+            <div class="col">
+              <label for="exampleInputPassword1" class="form-label font-weight-bold"
+                ><b>Invoice Status</b></label
+              >
+              <select
+                class="form-select"
+                id="status"
+                name="status"
+                value="{{invoice.status}}"
+              >
+                
+                <option value="Paid">Paid</option>
+                <option value="Paying">Still Paying</option>
+                <option value="Defaulted">Defaulted</option>
+                <option value="Payment Pending">Payment Pending</option>
+                <option value="Cancelled">Cancelled</option>
+                <option value="Review">Reviewing</option>
+              </select>
+            </div>
           </div>
+          
 
           <div class="text-center mt-2">
             <button type="submit" class="btn btn-primary">

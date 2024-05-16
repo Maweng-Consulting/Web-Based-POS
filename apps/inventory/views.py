@@ -1,5 +1,9 @@
 from decimal import Decimal
 
+from django.core.files.base import ContentFile
+from django.core.files.storage import FileSystemStorage
+import csv
+
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -7,7 +11,10 @@ from django.shortcuts import redirect, render
 
 from apps.inventory.models import Inventory, InventoryLog, Purchase
 from apps.suppliers.models import Supplier, SupplyLog
+from apps.payments.models import SupplyInvoice
+from apps.inventory.upload_items import UploadNewStockMixin
 
+fs = FileSystemStorage(location="temp")
 
 # Create your views here.
 @login_required(login_url="/users/login/")
@@ -202,6 +209,8 @@ def new_purchase(request):
         cost = Decimal(request.POST.get("cost"))
         amount_paid = Decimal(request.POST.get("amount_paid"))
         purchase_type = request.POST.get("purchase_type")
+        pay_by = request.POST.get("pay_by_when")
+        date_supplied = request.POST.get("date_supplied")
 
         purchase = Purchase.objects.create(
             recorded_by_id=recorded_by,
@@ -210,6 +219,17 @@ def new_purchase(request):
             amount_paid=amount_paid,
             purchase_type=purchase_type,
         )
+
+        if purchase_type == "Credit":
+            invoice = SupplyInvoice()
+            invoice.supplier = purchase.supplier
+            invoice.amount_expected = purchase.cost
+            invoice.amount_paid = purchase.amount_paid
+            invoice.status = "Payment Pending"
+            invoice.date_due = pay_by
+            invoice.date_supplied = date_supplied
+            invoice.save()
+
         return redirect("purchases")
 
     return render(request, "purchases/new_purchase.html")
@@ -217,3 +237,24 @@ def new_purchase(request):
 
 def pay_purchase(request):
     pass
+
+
+def upload_stock_items(request):
+    if request.method == "POST":
+        stock_file = request.FILES["stock_file"]
+
+        source_file_content = stock_file.read()
+        source_file_content = ContentFile(source_file_content)
+        source_file_name = fs.save(
+            "temp_source_file.csv", source_file_content
+        )
+        temp_source_file = fs.path(source_file_name)
+        with open(temp_source_file) as f:
+            data = list(csv.DictReader(f))
+            try:
+                upload_mixin = UploadNewStockMixin(data=data)
+                upload_mixin.run()
+            except Exception as e:
+                raise e
+        return redirect("inventory")
+    return render(request, "inventory/upload_stock_items.html")

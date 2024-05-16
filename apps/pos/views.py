@@ -311,8 +311,8 @@ def update_cart_items(request, item_id=None, user_id=None):
         )
 
         if new_amount <= temp_item.item.quantity:
-            temp_item.quantity = new_amount
-            temp_item.price = temp_item.item.price * Decimal(new_amount)
+            temp_item.quantity += new_amount
+            temp_item.price = temp_item.item.price * Decimal(new_amount) + temp_item.item.price
             temp_item.save()
         else:
             return redirect("sales-point")
