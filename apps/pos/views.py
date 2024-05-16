@@ -106,12 +106,12 @@ def sales_point(request):
         item_id = request.POST.get("item_id")
         print(f"Item ID: {item_id}, New Amount: {new_amount}")
 
-        temp_item = TemporaryCustomerCartItem.objects.get(
+        temp_item = TemporaryCustomerCartItem.objects.filter(
             id=item_id,
             user=user,
             cashier_id=cashier_id,
             customer_id=selected_customer["id"],
-        )
+        ).first()
 
         if new_amount <= float(temp_item.item.quantity):
             temp_item.quantity = new_amount
@@ -311,8 +311,8 @@ def update_cart_items(request, item_id=None, user_id=None):
         )
 
         if new_amount <= temp_item.item.quantity:
-            temp_item.quantity = new_amount
-            temp_item.price = temp_item.item.price * Decimal(new_amount)
+            temp_item.quantity += new_amount
+            temp_item.price = temp_item.item.price * Decimal(new_amount) + temp_item.item.price
             temp_item.save()
         else:
             return redirect("sales-point")

@@ -5,7 +5,7 @@
           <h1 class="modal-title fs-5 text-center">New Employee</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-            <form action="{% url 'register' %}" method="POST" enctype="multipart/form-data">
+            <form action="{% url 'new-staff' %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-body">
                   <div class="row mb-3">

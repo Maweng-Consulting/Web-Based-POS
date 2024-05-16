@@ -3,7 +3,7 @@ from django.urls import path
 from apps.inventory.views import (delete_stock_item, edit_stock_item,
                                   inventory, new_purchase, purchases,
                                   record_stock, restock_item, stock_logs,
-                                  take_out_stock)
+                                  take_out_stock, upload_stock_items)
 
 urlpatterns = [
     path("", inventory, name="inventory"),
@@ -15,4 +15,5 @@ urlpatterns = [
     path("stock-logs/", stock_logs, name="stock-logs"),
     path("purchases/", purchases, name="purchases"),
     path("new-purchase/", new_purchase, name="new-purchase"),
+    path("upload-stock/", upload_stock_items, name="upload-stock"),
 ]

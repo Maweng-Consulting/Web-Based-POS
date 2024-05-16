@@ -24,6 +24,11 @@ ORDER_TYPES = (
     ("Credit", "Credit"),
 )
 
+ORDER_SOURCE = (
+    ("Store", "Store"),
+    ("Online", "Online"),
+)
+
 
 class Order(AbstractBaseModel):
     customer = models.ForeignKey("users.Customer", on_delete=models.SET_NULL, null=True)
@@ -37,6 +42,7 @@ class Order(AbstractBaseModel):
     )
     order_receipt = models.FileField(upload_to="receipts/", null=True)
     order_type = models.CharField(max_length=255, choices=ORDER_TYPES, null=True)
+    order_source = models.CharField(max_length=255, choices=ORDER_SOURCE, default="Store")
 
     def __str__(self):
         return str(self.id)

@@ -39,6 +39,7 @@
               <th scope="col">Date Supplied</th>
               <th scope="col">Amount Expected</th>
               <th scope="col">Amount Paid</th>
+              <th scope="col">Balance</th>
               <th scope="col">Date Due</th>
               <th scope="col">Status</th>
               <th scope="col" colspan="2"></th>
@@ -52,6 +53,7 @@
               <td>{{invoice.date_supplied}}</td>
               <td>{{invoice.amount_expected}}</td>
               <td>{{invoice.amount_paid}}</td>
+              <td>{{invoice.invoice_balance}}</td>
               <td>{{invoice.date_due}}</td>
               <td>{{invoice.status}}</td>
               <td><a class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#editInvoiceModal{{ invoice.id }}">
