@@ -22,7 +22,7 @@
 </head>
 <body>
   <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
-    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="{% url 'home' %}">SHOP</a>
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="{% url 'home' %}">MAWENG SHOP</a>
   
     <ul class="navbar-nav flex-row d-md-none">
       <li class="nav-item text-nowrap">
@@ -130,8 +130,6 @@
                       Paid
                     </a>
                   </td>
-                  
-                  
                   {% endif %}
                   
                 </tr>
@@ -203,7 +201,7 @@ async function fetchMpesaPayments() {
         const response = await fetch(`/pos/mpesa-payments/`);
 
         if (!response.ok) {
-        throw new Error('Network response was not ok');
+          throw new Error('Network response was not ok');
         }
 
         const data = await response.json();
