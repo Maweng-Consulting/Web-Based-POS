@@ -71,12 +71,14 @@ class OrderItem(AbstractBaseModel):
 
 
 class TemporaryCustomerCartItem(AbstractBaseModel):
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey("users.User", on_delete=models.SET_NULL, null=True)
     customer = models.ForeignKey("users.Customer", on_delete=models.SET_NULL, null=True)
     cashier_id = models.IntegerField(null=True)
     item = models.ForeignKey("inventory.Inventory", on_delete=models.CASCADE)
     quantity = models.FloatField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    paid = models.BooleanField(default=False)
 
     def __str__(self):
         return self.item.name

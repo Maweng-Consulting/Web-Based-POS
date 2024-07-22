@@ -29,7 +29,7 @@ def stock_logs(request):
             | Q(actioned_by__last_name__icontains=search_text)
         )
 
-    paginator = Paginator(stock_logs, 15)
+    paginator = Paginator(stock_logs, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -47,7 +47,7 @@ def inventory(request):
         name = request.POST.get("name")
         stock_items = Inventory.objects.filter(Q(name__icontains=name))
 
-    paginator = Paginator(stock_items, 12)
+    paginator = Paginator(stock_items, 9)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 

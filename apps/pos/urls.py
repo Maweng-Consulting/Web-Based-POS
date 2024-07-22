@@ -1,6 +1,6 @@
 from django.urls import path
 
-from apps.pos.apis.views import SessionCreateAPIView
+from apps.pos.apis.views import SessionCreateAPIView, CustomerOrderPaidAPIView
 from apps.pos.views import (InventoryAPIView, MpesaPaymentAPIView, add_to_cart,
                             credit_orders, credit_sales_point,
                             mark_order_as_paid, new_credit_order, orders,
@@ -20,6 +20,7 @@ urlpatterns = [
     path("inventories/", InventoryAPIView.as_view(), name="get_table_data"),
     path("mpesa-payments/", MpesaPaymentAPIView.as_view(), name="mpesa-payments"),
     path("create-session/", SessionCreateAPIView.as_view(), name="create-session"),
+    path("customer-order-paid/", CustomerOrderPaidAPIView.as_view(), name="customer-order-paid"),
     path("orders/", orders, name="orders"),
     path("credit-orders/", credit_orders, name="credit-orders"),
     path(
