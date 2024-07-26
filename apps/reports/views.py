@@ -459,7 +459,7 @@ def daily_and_weekly_sales(request):
 def general_sales_report(request):
     orders = Order.objects.all().order_by("-created")
 
-    sellers = User.objects.filter(role="cashier")
+    sellers = User.objects.filter(role__in=["cashier", "admin"])
 
     if request.method == "POST":
         # Filter Data
