@@ -2,3 +2,4 @@ django
 djangorestframework
 pdfkit
 reportlab
+gunicorn
