@@ -27,7 +27,7 @@
           <h5 class="card-title">Orders Placed Today</h5>
           <hr/>
           <p class="card-text">Orders Count: {{orders_placed_today}}</p>
-          <a href="#" class="btn btn-info">See Report</a>
+          <a href="{% url 'weekly-and-daily-sales' %}" class="btn btn-info">See Report</a>
         </div>
       </div>
   </div>
@@ -37,7 +37,7 @@
           <h5 class="card-title">Sales This Week</h5>
           <hr/>
           <p class="card-text">Amount: {{week_orders}}</p>
-          <a href="#" class="btn btn-info">See Report</a>
+          <a href="{% url 'weekly-and-daily-sales' %}" class="btn btn-info">See Report</a>
         </div>
       </div>
       <div class="card m-2" style="width: 16rem; height: 180px;">
@@ -46,7 +46,7 @@
           <hr/>
           <p class="card-text">Amount: {{month_orders}}</p>
          
-          <a href="#" class="btn btn-info">See Report</a>
+          <a href="{% url 'monthly-sales' %}" class="btn btn-info">See Report</a>
         </div>
       </div>
       <div class="card m-2" style="width: 16rem; height: 180px;">
@@ -54,7 +54,7 @@
           <h5 class="card-title">Sales Today</h5>
           <hr/>
           <p class="card-text">Amount: {{orders_today}}</p>
-          <a href="#" class="btn btn-info">See Report</a>
+          <a href="{% url 'weekly-and-daily-sales' %}" class="btn btn-info">See Report</a>
         </div>
       </div>
   

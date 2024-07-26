@@ -1,0 +1,118 @@
+<div class="modal fade" id="saleReceiptModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content receipt-content">
+            <div class="header">
+                <h5 class="text-center">Maweng General Stores</h5>
+                <hr>
+            </div>
+            <div class="modal-body">
+                <table class="bill-details">
+                    <tbody>
+                        <tr>
+                            <td>Date : <span>{{current_date}}</span></td>
+                            <td>Time : <span>{{current_time}}</span></td>
+                        </tr>
+                        <tr>
+                            <td>Served By #: <span>{{order.served_by}}</span></td>
+                            <td>Bill # : <span>{{order.id}}</span></td>
+                        </tr>
+                        <tr>
+                            <th class="center-align" colspan="2"><span class="receipt">Original Receipt</span></th>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="items">
+                    <thead>
+                        <tr>
+                            <th class="heading name">Item</th>
+                            <th class="heading qty">Qty</th>
+                            <th class="heading rate">Rate</th>
+                            <th class="heading amount">Amount</th>
+                        </tr>
+                    </thead>
+                   
+                    <tbody>
+                        {% for order_item in cart_items %}
+                        <tr>
+                            <td>{{order_item.item.name}}</td>
+                            <td>{{order_item.quantity}}</td>
+                            <td class="price">{{order_item.item.selling_price}}</td>
+                            <td class="price">{{order_item.price}}</td>
+                        </tr>
+                        {% endfor %}
+                        
+                        <tr>
+                            <td colspan="3" class="sum-up line">Subtotal</td>
+                            <td class="line price">{{total_cost}}</td>
+                        </tr>
+                        <tr>
+                            <th colspan="3" class="total text">Total</th>
+                            <th class="total price">{{total_cost}}</th>
+                        </tr>
+                    </tbody>
+                </table>
+                <section>
+                    <p>
+                        Customer: {{selected_customer.name}}
+                    </p>
+                    <p style="text-align:center">
+                        Thank you for your visit!
+                    </p>
+                </section>
+                <footer style="text-align:center">
+                    <p>Designed & Maintained By Maweng</p>
+                    <p>www.maweng.co.ke</p>
+                </footer>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary no-print" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary no-print" onclick="printModal()">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const orderData = {
+        "customer_name": `{{selected_customer.name}}`,
+        "customer_id": `{{selected_customer.id}}`,
+        "cashier_id": `{{user.id}}`,
+        "order_id": `{{order_id}}`
+    }
+    console.log(orderData)
+    function getCSRFToken() {
+    const csrfCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('csrftoken='));
+    if (csrfCookie) {
+        return csrfCookie.split('=')[1];
+    }
+    return null;
+}
+let headersList = {
+        "Accept": "*/*",
+        "Content-Type": "application/json",
+        'X-CSRFToken': getCSRFToken(),
+    }
+    const printModal = async() =>{
+        var printContents = document.querySelector('.receipt-content').innerHTML;
+        var originalContents = document.body.innerHTML;
+        
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        try {
+            const response = await fetch("/pos/customer-order-paid/", {
+                method: "POST",
+                headers: headersList,
+                body: JSON.stringify(orderData)
+            });
+            if (response.ok) {
+                console.log("Order printed successfully")
+            } else {
+                window.alert("Order could not be printed")
+            }
+        } catch (error) {
+            console.log(error)
+            window.alert(error.message)
+        }
+        window.location.reload(); // To reload and reset the page state
+    }
+</script>

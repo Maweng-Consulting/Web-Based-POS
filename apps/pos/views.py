@@ -63,7 +63,7 @@ def orders(request):
         elif sale_type:
             orders = Order.objects.filter(order_type=sale_type)
 
-    paginator = Paginator(orders, 12)
+    paginator = Paginator(orders, 8)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -73,7 +73,7 @@ def orders(request):
 
 def credit_orders(request):
     orders = Order.objects.filter(order_type="Credit")
-    paginator = Paginator(orders, 12)
+    paginator = Paginator(orders, 8)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -104,7 +104,7 @@ def sales_point(request):
     if request.method == "POST":
         new_amount = float(request.POST.get("new_amount"))
         item_id = request.POST.get("item_id")
-        print(f"Item ID: {item_id}, New Amount: {new_amount}")
+        
 
         temp_item = TemporaryCustomerCartItem.objects.filter(
             id=item_id,
@@ -112,6 +112,16 @@ def sales_point(request):
             cashier_id=cashier_id,
             customer_id=selected_customer["id"],
         ).first()
+
+        temp_item.item.quantity += temp_item.quantity
+        temp_item.item.save()
+
+        temp_item.item.refresh_from_db()
+        temp_item.refresh_from_db()
+
+        print(f"Item ID: {item_id}, New Amount: {new_amount}")
+        print(f"Item ID: {temp_item.id} Current Amount: {temp_item.quantity}")
+
 
         if new_amount <= float(temp_item.item.quantity):
             temp_item.quantity = new_amount
@@ -123,6 +133,7 @@ def sales_point(request):
 
         else:
             return redirect("sales-point")
+        
 
     print(f"User ID: {user.id}, Cashier ID: {cashier_id}")
     items = Inventory.objects.all()
@@ -130,12 +141,17 @@ def sales_point(request):
     cart_items = TemporaryCustomerCartItem.objects.filter(
         user=user, cashier_id=cashier_id, customer_id=selected_customer["id"]
     )
+    
+    order_is_paid = cart_items.first().paid if cart_items else False
+    order_id = cart_items.first().order.id if (cart_items and cart_items.first().order) else None
 
     total_cost = sum(list(cart_items.values_list("price", flat=True)))
 
     paginator = Paginator(items, 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+
+    current_time = datetime.now().timetz()
 
     context = {
         "orders": items,
@@ -144,6 +160,11 @@ def sales_point(request):
         "total_cost": total_cost,
         "customers": customers,
         "selected_customer": selected_customer,
+        "current_date": date_today,
+        "current_time": current_time,
+        "order_is_paid": order_is_paid,
+        "user": user,
+        "order_id": order_id
     }
     return render(request, "pos/sale.html", context)
 
@@ -263,8 +284,8 @@ def mark_order_as_paid(request, user_id=None):
                 unit_price=order_item.item.selling_price,
             )
 
-    temp_items.delete()
-    del request.session[f"selected_customer_{cashier_id}"]
+    temp_items.update(paid=True, order=order)
+    #del request.session[f"selected_customer_{cashier_id}"]
     return redirect("sales-point")
 
 

@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{% block additional_css %}
+{% endblock additional_css %}
+
 {% block content %}
 <div class="row">
     <div class="col-4">
@@ -31,11 +34,11 @@
 </div>
 
 <hr/>
-      <div class="table-responsive small">
+      <div class="">
         <table class="table table-sm">
           <thead>
             <tr>
-              <th scope="col">Order ID</th>
+              <th scope="col">#</th>
               <th scope="col">Ordered At.</th>
               <th scope="col">Sold To</th>
               <th scope="col">Served By</th>
@@ -58,11 +61,12 @@
               <td>
                 <a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#orderItemsModal{{ order.id }}"><i class="bi bi-eye-fill"></i></a>
               </td>
-              <td><a href="{% url 'print-order' order.id %}" class="btn btn-warning btn-sm">
-                <i class="bi bi-printer"></i>
+              <td><a href="#" data-bs-toggle="modal" data-bs-target="#emailReceiptModal" class="btn btn-warning btn-sm">
+                <i class="bi bi-envelope"></i>
               </a></td>
             </tr>
             {% include "orders/order_items.html" %}
+            {% include "orders/email_order_receipt.html" %}
            
             {% endfor %}
 

@@ -9,12 +9,12 @@ class ProductListAPIView(generics.ListAPIView):
     queryset = Inventory.objects.all()
     serializer_class = ProductSerializer
 
-class ProductImageAPIView(generics.ListCreateAPIView):
+class ProductImageAPIView(generics.ListAPIView):
     queryset = ProductImage.objects.all()
     serializer_class = ProductImageSerializer
 
-    def get(self, request, product_id, *args, **kwargs):
-        images = ProductImage.objects.filter(product_id=product_id)
-        serializer = self.serializer_class(instance=images, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-        #return super().get(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        params = self.request.query_params.get("product")
+        queryset = self.queryset.filter(product_id=params).values()
+        return Response(queryset)
+        

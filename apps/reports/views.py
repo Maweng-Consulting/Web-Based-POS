@@ -162,7 +162,7 @@ def sales_by_product(request):
             writer.writerow(["Total Sales", "", "", "", "", "", cummulative_total])
             return response
 
-    paginator = Paginator(product_sales, 15)
+    paginator = Paginator(product_sales, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -290,7 +290,7 @@ def monthly_sales(request):
             writer.writerow(["Total Sales", "", "", "", "", "", cummulative_total])
             return response
 
-    paginator = Paginator(monthly_sales, 15)
+    paginator = Paginator(monthly_sales, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     items = Inventory.objects.all()
@@ -447,7 +447,7 @@ def daily_and_weekly_sales(request):
             f"Product: {product_name}, Start Date: {type(start_date)}, End Date: {type(end_date)}"
         )
 
-    paginator = Paginator(weekly_sales, 15)
+    paginator = Paginator(weekly_sales, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -459,7 +459,7 @@ def daily_and_weekly_sales(request):
 def general_sales_report(request):
     orders = Order.objects.all().order_by("-created")
 
-    sellers = User.objects.filter(role="cashier")
+    sellers = User.objects.filter(role__in=["cashier", "admin"])
 
     if request.method == "POST":
         # Filter Data

@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: pos_web
+    command: gunicorn WebPOS.wsgi:application --bind 0.0.0.0:8001 --workers 3
+    volumes:
+      - .:/app
+    ports:
+      - "8001:8001"
+    environment:
+      - DEBUG=1
+      - DJANGO_ALLOWED_HOSTS=localhost
+      - POSTGRES_DB=ticketing
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - DATABASE_HOST=db
+      - EMAIL_HOST=mailhog
+      - EMAIL_PORT=1025
+      - SITE_EMAIL=info@ticketing.com
+      - EMAIL_HOST_PASSWORD=mailhog
+      - EMAIL_HOST_USER=mailhog
