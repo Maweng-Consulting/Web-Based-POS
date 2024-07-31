@@ -11,4 +11,4 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "phone_number", "id_number", "gender"]
+    list_display = ["id", "user"]

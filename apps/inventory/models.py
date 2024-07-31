@@ -45,7 +45,7 @@ class Inventory(AbstractBaseModel):
     quantity = models.FloatField(default=0)
     unit_of_measure = models.CharField(max_length=255)
     brand = models.CharField(max_length=255, null=True)
-    profile_photo = models.ImageField(upload_to="product_images/", null=True)
+    image = models.ImageField(upload_to="product_images/", null=True)
 
     def __str__(self):
         return self.name
