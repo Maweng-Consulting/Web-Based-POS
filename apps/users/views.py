@@ -177,7 +177,7 @@ def user_login(request):
 @login_required(login_url="/users/login/")
 def user_logout(request):
     logout(request)
-    return redirect("login")
+    return redirect("home")
 
 
 @login_required(login_url="/users/login/")
@@ -208,7 +208,8 @@ def customers(request):
 
 def new_customer(request):
     if request.method == "POST":
-        name = request.POST.get("name")
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
         email = request.POST.get("email")
         phone_number = request.POST.get("phone_number")
         id_number = request.POST.get("id_number")
@@ -217,12 +218,22 @@ def new_customer(request):
         city = request.POST.get("city")
         country = request.POST.get("country")
 
-        customer = Customer.objects.create(
-            name=name,
+        user = User.objects.create(
+            first_name=first_name,
+            last_name=last_name,
             email=email,
+            username=email,
             phone_number=phone_number,
-            id_number=id_number,
             gender=gender,
+            id_number=id_number,
+            role="Customer"
+        )
+        user.set_password(id_number)
+        user.save()
+
+        customer = Customer.objects.create(
+            name=f"{first_name} {last_name}",
+            user=user,
             address=address,
             city=city,
             country=country,
@@ -235,7 +246,8 @@ def new_customer(request):
 def edit_customer(request):
     if request.method == "POST":
         customer_id = request.POST.get("customer_id")
-        name = request.POST.get("name")
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
         email = request.POST.get("email")
         phone_number = request.POST.get("phone_number")
         id_number = request.POST.get("id_number")
@@ -245,15 +257,24 @@ def edit_customer(request):
         country = request.POST.get("country")
 
         customer = Customer.objects.get(id=customer_id)
-        customer.name = name
-        customer.email = email
-        customer.phone_number = phone_number
-        customer.id_number = id_number
-        customer.gender = gender
+        customer.name = f"{first_name} {last_name}"
         customer.address = address
         customer.city = city
         customer.country = country
         customer.save()
+
+        customer.user.first_name =first_name
+        customer.user.last_name = last_name
+        customer.user.email = email
+        customer.user.username = email
+        customer.user.phone_number = phone_number
+        customer.user.id_number = id_number
+        customer.user.gender = gender
+        customer.user.role = "Customer"
+        customer.user.save()
+        customer.user.set_password(id_number)
+        customer.user.save()
+        
         return redirect("customers")
     return render(request, "customers/edit_customer.html")
 
@@ -270,7 +291,8 @@ def delete_customer(request):
 
 def create_customer_at_pos(request):
     if request.method == "POST":
-        name = request.POST.get("name")
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
         email = request.POST.get("email")
         phone_number = request.POST.get("phone_number")
         id_number = request.POST.get("id_number")
@@ -279,12 +301,22 @@ def create_customer_at_pos(request):
         city = request.POST.get("city")
         country = request.POST.get("country")
 
-        customer = Customer.objects.create(
-            name=name,
+        user = User.objects.create(
+            first_name=first_name,
+            last_name=last_name,
             email=email,
+            username=email,
             phone_number=phone_number,
-            id_number=id_number,
             gender=gender,
+            id_number=id_number,
+            role="Customer"
+        )
+        user.set_password(id_number)
+        user.save()
+
+        customer = Customer.objects.create(
+            name=f"{first_name} {last_name}",
+            user=user,
             address=address,
             city=city,
             country=country,

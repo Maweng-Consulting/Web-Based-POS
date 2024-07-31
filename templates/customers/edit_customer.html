@@ -21,13 +21,25 @@
                   <div class="row mb-3">
                   
                 <div class="col">
-                  <label for="exampleInputPassword1" class="form-label">Name</label>
+                  <label for="exampleInputPassword1" class="form-label">First Name</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="name"
-                    name="name"
-                    value="{{customer.name}}"
+                    id="first_name"
+                    name="first_name"
+                    value="{{customer.user.first_name}}"
+                    required
+                  />
+                </div>
+
+                <div class="col">
+                  <label for="exampleInputPassword1" class="form-label">Last Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="last_name"
+                    name="last_name"
+                    value="{{customer.user.last_name}}"
                     required
                   />
                 </div>

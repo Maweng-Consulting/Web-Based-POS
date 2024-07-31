@@ -22,7 +22,7 @@ def home(request):
         return redirect("inventory")
 
     customers_count = Customer.objects.all().count()
-    staff_count = User.objects.exclude(role__in=["Supplier", "Broker"]).count()
+    staff_count = User.objects.exclude(role__in=["Supplier", "Broker", "Customer"]).count()
 
     orders_placed_today = Order.objects.filter(created__date=date_today).count()
     orders_today = sum(

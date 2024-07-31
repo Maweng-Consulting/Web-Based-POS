@@ -45,10 +45,10 @@
             <tr>
               <td>{{customer.id}}</td>
               <td>{{customer.name}}</td>
-              <td>{{customer.id_number}}</td>
-              <td>{{customer.gender}}</td>
-              <td>{{customer.phone_number}}</td>
-              <td>{{customer.email}}</td>
+              <td>{{customer.user.id_number}}</td>
+              <td>{{customer.user.gender}}</td>
+              <td>{{customer.user.phone_number}}</td>
+              <td>{{customer.user.email}}</td>
               <td><a class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editCustomerModal{{ customer.id }}">
                 <i class="bi bi-pencil-square"></i>
               </a></td>
