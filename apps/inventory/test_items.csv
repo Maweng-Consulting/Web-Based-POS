@@ -1,5 +1,9 @@
 name,buying_price,selling_price,quantity,unit_of_measure
-Keringet 1L,100,130, 100,Litres
-EXE Chapati 2KG,150,185,100,Pieces
-OMO 700G,250,170,100,Pieces
-Salad 2L, 550, 700, 100, Pieces
+Furaha Ugali 2KG,100,130, 100,Pieces
+EXE Chapati 10KG,1500,1805,100,Pieces
+OMO 1000G,250,270,100,Pieces
+Salad 5L, 1550, 1700, 100, Pieces
+Furaha Ugali 5KG,500,630, 100,Pieces
+EXE Chapati 1KG,175,185,100,Pieces
+OMO 100G, 150,170,100,Pieces
+Salad 1.5L, 650, 700, 100, Pieces

@@ -15,6 +15,8 @@ from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from rest_framework import generics, status
 
+from apps.core.custom_pagination import NoPagination
+
 from apps.inventory.models import Inventory, MpesaPayment
 from apps.pos.generate_receipt import render_to_pdf
 from apps.pos.models import (CreditOrder, Order, OrderItem,
@@ -29,6 +31,7 @@ date_today = datetime.now().date()
 class InventoryAPIView(generics.ListAPIView):
     queryset = Inventory.objects.filter(quantity__gte=1)
     serializer_class = InventorySerializer
+    pagination_class = NoPagination
 
 
 class MpesaPaymentAPIView(generics.ListCreateAPIView):
