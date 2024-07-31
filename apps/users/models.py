@@ -16,10 +16,10 @@ ROLE_CHOICES = (
 
 
 class User(AbstractUser, AbstractBaseModel):
-    role = models.CharField(choices=ROLE_CHOICES, max_length=32, null=True)
-    phone_number = models.CharField(max_length=255, null=True)
+    role = models.CharField(choices=ROLE_CHOICES, max_length=32)
+    phone_number = models.CharField(max_length=255)
     id_number = models.CharField(max_length=255, null=True)
-    gender = models.CharField(max_length=255, null=True)
+    gender = models.CharField(max_length=255)
     position = models.CharField(max_length=255, null=True)
 
     def __str__(self):
@@ -36,11 +36,7 @@ class User(AbstractUser, AbstractBaseModel):
 
 
 class Customer(AbstractBaseModel):
-    name = models.CharField(max_length=255)
-    email = models.EmailField()
-    phone_number = models.CharField(max_length=255, null=True)
-    id_number = models.CharField(max_length=255, null=True)
-    gender = models.CharField(max_length=255, null=True)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
     address = models.CharField(max_length=255, null=True)
     city = models.CharField(max_length=255, null=True)
     country = models.CharField(max_length=255, null=True)
