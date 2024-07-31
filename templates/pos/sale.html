@@ -323,10 +323,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="{% static 'dashboard.js' %}"></script>
 <script>
-const BASE_URL = "http://127.0.0.1:8001"
 
-
-  
 async function fetchData() {
     try {
         const response = await fetch(`/pos/inventories/`);
