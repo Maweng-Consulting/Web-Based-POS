@@ -36,6 +36,7 @@ class User(AbstractUser, AbstractBaseModel):
 
 
 class Customer(AbstractBaseModel):
+    name = models.CharField(max_length=255, default="Walk In Customer")
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
     address = models.CharField(max_length=255, null=True)
     city = models.CharField(max_length=255, null=True)
