@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps.core.models import AbstractBaseModel
+from apps.core.models import AbstractBaseModel, MeasureUnit
 
 UNIT_OF_MEASURE_CHOICES = (
     ("Kilogram", "Kilograms"),
@@ -43,7 +43,7 @@ class Inventory(AbstractBaseModel):
     buying_price = models.DecimalField(max_digits=100, decimal_places=2)
     selling_price = models.DecimalField(max_digits=100, decimal_places=2)
     quantity = models.FloatField(default=0)
-    unit_of_measure = models.CharField(max_length=255)
+    unit_of_measure = models.ForeignKey(MeasureUnit, on_delete=models.SET_NULL, null=True)
     brand = models.CharField(max_length=255, null=True)
     image = models.ImageField(upload_to="product_images/", null=True)
 

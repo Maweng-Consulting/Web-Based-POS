@@ -9,10 +9,11 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import redirect, render
 
-from apps.inventory.models import Inventory, InventoryLog, Purchase
+from apps.inventory.models import Inventory, InventoryLog, Purchase, ProductCategory
 from apps.suppliers.models import Supplier, SupplyLog
 from apps.payments.models import SupplyInvoice
 from apps.inventory.upload_items import UploadNewStockMixin
+from apps.core.models import MeasureUnit
 
 fs = FileSystemStorage(location="temp")
 
@@ -42,6 +43,8 @@ def stock_logs(request):
 def inventory(request):
     stock_items = Inventory.objects.all().order_by("-created")
     suppliers = Supplier.objects.all()
+    categories = ProductCategory.objects.all()
+    measure_units = MeasureUnit.objects.all()
 
     if request.method == "POST":
         name = request.POST.get("name")
@@ -51,7 +54,7 @@ def inventory(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    context = {"stock_items": stock_items, "page_obj": page_obj, "suppliers": suppliers}
+    context = {"stock_items": stock_items, "page_obj": page_obj, "suppliers": suppliers, "categories": categories, "measure_units": measure_units}
     return render(request, "inventory/inventory.html", context)
 
 
@@ -64,13 +67,15 @@ def record_stock(request):
         buying_price = request.POST.get("buying_price")
         selling_price = request.POST.get("selling_price")
         unit_of_measure = request.POST.get("unit")
+        category = request.POST.get("category")
 
         inv = Inventory.objects.create(
             name=name,
             quantity=quantity,
             buying_price=buying_price,
             selling_price=selling_price,
-            unit_of_measure=unit_of_measure,
+            unit_of_measure_id=unit_of_measure,
+            category_id=category,
         )
 
         stock_log = InventoryLog.objects.create(
@@ -92,13 +97,15 @@ def edit_stock_item(request):
         buying_price = request.POST.get("buying_price")
         selling_price = request.POST.get("selling_price")
         unit_of_measure = request.POST.get("unit")
+        category = request.POST.get("category")
 
         stock_item = Inventory.objects.get(id=stock_id)
         stock_item.name = name
         stock_item.quantity = quantity
         stock_item.buying_price = buying_price
         stock_item.selling_price = selling_price
-        stock_item.unit_of_measure = unit_of_measure
+        stock_item.unit_of_measure_id = unit_of_measure
+        stock_item.category_id = category
         stock_item.save()
 
         stock_log = InventoryLog.objects.create(
