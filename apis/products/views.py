@@ -6,8 +6,8 @@ from apps.inventory.models import Inventory, ProductImage, ProductCategory
 from apis.products.serializers import ProductSerializer, ProductImageSerializer, ProductCategorySerializer
 
 
-class ProductListAPIView(generics.ListAPIView):
-    queryset = Inventory.objects.all()
+class ProductListAPIView(generics.ListCreateAPIView):
+    queryset = Inventory.objects.all().order_by("-created")
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["category__name", "name"]
