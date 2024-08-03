@@ -9,8 +9,8 @@
                 {% csrf_token %}
                 <div class="modal-body">
                   
-                <div class="mb-2">
-                  <label for="exampleInputPassword1" class="form-label">Item Name</label>
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label fw-bold">Item Name</label>
                   <input
                     type="text"
                     class="form-control"
@@ -19,45 +19,54 @@
                     required
                   />
                 </div>
-                <div class="mb-2">
-                    <label class="form-label">Unit</label>
-                    <select class="form-select" id="unit" name="unit">
-                        <option value="Kg">Kilograms (KG) </option>
-                        <option value="Grams">Grams (g)</option>
-                        <option value="Litres">Litres (L)</option>
-                        <option value="Boxes">Boxes</option>
-                        <option value="Cartons">Cartons</option>
-                        <option value="Metres">Metres</option>
-                        <option value="Pieces">Pieces</option>
+                <div class="row mb-3">
+                  <div class="col">
+                    <label class="form-label fw-bold">Category</label>
+                    <select class="form-select" id="category" name="category">
+                        {% for category in categories %}
+                        <option value="{{category.id}}">{{category.name}}</option>
+                        {% endfor %}
                       </select>
                   </div>
+                  <div class="col">
+                      <label class="form-label fw-bold">Unit</label>
+                      <select class="form-select" id="unit" name="unit">
+                          {% for unit in measure_units %}
+                          <option value="{{unit.id}}">{{unit.title}}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
 
-                  <div class="mb-2">
-                    <label for="exampleInputPassword1" class="form-label">Buying Price</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="buying_price"
-                      name="buying_price"
-                      min="0"
-                      required
-                    />
-                  </div>
-
-                  <div class="mb-2">
-                    <label for="exampleInputPassword1" class="form-label">Selling Price</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="selling_price"
-                      name="selling_price"
-                      min="0"
-                      required
-                    />
+                  <div class="row mb-3">
+                    <div class="col">
+                      <label for="exampleInputPassword1" class="form-label fw-bold">Buying Price</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="buying_price"
+                        name="buying_price"
+                        min="0"
+                        required
+                      />
+                    </div>
+  
+                    <div class="col">
+                      <label for="exampleInputPassword1" class="form-label fw-bold">Selling Price</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="selling_price"
+                        name="selling_price"
+                        min="0"
+                        required
+                      />
+                    </div>
                   </div>
                   
                   <div class="mb-2">
-                    <label for="exampleInputPassword1" class="form-label">Quantity</label>
+                    <label for="exampleInputPassword1" class="form-label fw-bold">Quantity</label>
                     <input
                       type="number"
                       class="form-control"

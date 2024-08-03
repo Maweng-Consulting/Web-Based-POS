@@ -18,3 +18,10 @@ class AbstractBaseModel(models.Model):
 class PlatformLog(AbstractBaseModel):
     actioned_by = models.ForeignKey("users.User", on_delete=models.SET_NULL, null=True)
     action = models.JSONField(default=list)
+
+
+class MeasureUnit(AbstractBaseModel):
+    title = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.title

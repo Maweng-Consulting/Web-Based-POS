@@ -2,7 +2,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5 text-center">Edit Item - {{stock.name}}</h1>
+          <h1 class="modal-title fs-5 text-center">Edit Stock Item</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
             <form action="{% url 'edit-stock-item' %}" method="POST" enctype="multipart/form-data">
@@ -20,9 +20,9 @@
                           hidden
                         />
                       </div>
-                <div class="row mb-3">
-                <div class="col">
-                  <label for="exampleInputPassword1" class="form-label">Item Name</label>
+          
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label fw-bold">Item Name</label>
                   <input
                     type="text"
                     class="form-control"
@@ -32,23 +32,34 @@
                     required
                   />
                 </div>
-                <div class="col">
-                    <label class="form-label">Unit</label>
-                    <select class="form-select" id="unit" name="unit" value="{{stock.unit_of_measure}}">
-                      <option value=""></option>
-                        <option value="Kg">Kilograms (KG) </option>
-                        <option value="Grams">Grams (g)</option>
-                        <option value="Litres">Litres (L)</option>
-                        <option value="Boxes">Boxes</option>
-                        <option value="Cartons">Cartons</option>
-                        <option value="Metres">Metres</option>
-                        <option value="Pieces">Pieces</option>
+                
+                <div class="row mb-3">
+                  <div class="col">
+                    <label class="form-label fw-bold">Category</label>
+                    <select class="form-select" id="category" name="category" value="{{stock.category}}">
+                        <option value="{{stock.category.id}}">{{stock.category.name}}</option>
+                        {% for category in categories %}
+                        {% if category.name != stock.category.name %}
+                        <option value="{{category.id}}">{{category.name}}</option>
+                        {% endif %}
+                        {% endfor %}
                       </select>
                   </div>
+                  <div class="col">
+                      <label class="form-label fw-bold">Unit</label>
+                      <select class="form-select" id="unit" name="unit" value="{{stock.unit_of_measure}}">
+                          <option value="{{stock.unit_of_measure.id}}">{{stock.unit_of_measure.title}}</option>
+                          {% for unit in measure_units %}
+                          {% if unit.id != stock.unit_of_measure.id %}
+                          <option value="{{unit.id}}">{{unit.title}}</option>
+                          {% endif %}
+                          {% endfor %}
+                        </select>
+                    </div>
                 </div>
                 <div class="row mb-3">
                   <div class="col">
-                    <label for="exampleInputPassword1" class="form-label">Buying Price</label>
+                    <label for="exampleInputPassword1" class="form-label fw-bold">Buying Price</label>
                     <input
                       type="number"
                       class="form-control"
@@ -61,7 +72,7 @@
                   </div>
 
                   <div class="col">
-                    <label for="exampleInputPassword1" class="form-label">Selling Price</label>
+                    <label for="exampleInputPassword1" class="form-label fw-bold">Selling Price</label>
                     <input
                       type="number"
                       class="form-control"
@@ -75,7 +86,7 @@
                 </div>
                   
                   <div class="mb-2">
-                    <label for="exampleInputPassword1" class="form-label">Quantity</label>
+                    <label for="exampleInputPassword1" class="form-label fw-bold">Quantity</label>
                     <input
                       type="number"
                       class="form-control"
