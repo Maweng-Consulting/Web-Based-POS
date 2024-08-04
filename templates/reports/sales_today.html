@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block additional_css %}
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<style>
+  .select2-container .select2-selection--single{
+  height:34px !important;
+}
+.select2-container--default .select2-selection--single{
+       border: 1px solid #ccc !important; 
+
+}
+</style>
+
+{% endblock additional_css %}
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h3 class="text-center">Weekly Sales</h3>
+    </div>
+  
+</div>
+<hr>
+<div class="row">
+    <div class="col-8">
+        <form method="POST">
+            {% csrf_token %}
+            
+              <div class="row">
+                <div class="col-4">
+                    <select class="select2 form-select" name="weekly_product_name" id="weekly_product_name" onchange="getDates()">
+                      <option value="">---</option>
+                      {% for item in items %}
+                        <option value="{{item.name}}">{{item.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                <div class="col-3">
+                    <input type="date" class="form-control" id="report_start" name="report_start" onchange="getDates()">
+                  </div>
+                <div class="col-3">
+                    <input type="date" class="form-control" id="report_end" name="report_end" onchange="getDates()">
+                </div>
+                
+                <div class="col-2">
+                  <button class="btn btn-success">Filter</button>
+                </div>
+              </div>
+              
+          </form>
+    </div>
+    <div class="col-4">
+      <form method="POST" id="downloadForm">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          <div class="row">
+            <div class="col">
+              <input type="text" class="form-control" hidden id="action_type" name="action_type" value="export">
+            </div>
+            <div class="col">
+              <input type="text" hidden class="form-control" id="product_name" name="product_name">
+            </div>
+            
+            <div class="col">
+              <button class="btn btn-success">Export</button>
+            </div>
+          </div>
+          
+        </div>
+    
+      </form>
+    </div>
+</div>
+
+      <div class="table-responsive small">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Sold On</th>
+              <th scope="col">Item</th>
+              <th scope="col">Unit Price</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Total Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product_sale in page_obj %}
+            <tr>
+              <td>{{product_sale.id}}</td>
+              <td>{{product_sale.created.date}}</td>
+              <td>{{product_sale.item.name}}</td>
+              <td>{{product_sale.unit_price}}</td>
+              <td>{{product_sale.total_quantity}}</td>
+              <td>{{product_sale.total_price}}</td>
+            </tr>
+           
+           
+            {% endfor %}
+
+          </tbody>
+        </table>
+        <div>
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+              {% if page_obj.has_previous %}   
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+              {% endif %}
+              <a class="page-link" href="#">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a>
+              {% if page_obj.has_next %}    
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+              {% endif %}   
+            </ul>
+          </nav>
+        </div>
+      </div>
+{% endblock content %}
+
+{% block additional_scripts %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+<script>
+ $('.select2').select2();
+
+  const getDates = async () => {
+    console.log("Form Filltered!!!!!!!!!")
+    var product = document.getElementById("weekly_product_name");
+    var productValue = product.value;
+
+    var reportStart = document.getElementById("report_start");
+    var reportStartValue = reportStart.value;
+
+    var reportEnd = document.getElementById("report_end");
+    var reportEndValue = reportEnd.value;
+
+    if (productValue || reportStartValue || reportEndValue) {
+      sessionStorage.setItem("weekly_product_name", productValue)
+      sessionStorage.setItem("report_start", reportStartValue)
+      sessionStorage.setItem("report_end", reportEndValue)
+    }
+
+    console.log(`Product: ${productValue}, Report Start: ${reportStartValue}, Report End: ${reportEndValue}`)
+  }
+
+  function loadFormData() {
+    var form = document.getElementById('downloadForm');
+    form.elements['product_name'].value = sessionStorage.getItem('weekly_product_name') || '';
+    form.elements['report_end_date'].value = sessionStorage.getItem('report_end') || '';
+    form.elements['report_start_date'].value = sessionStorage.getItem('report_start') || '';
+  }
+
+    // Load form data from sessionStorage when the DOM content is loaded
+    document.addEventListener('DOMContentLoaded', loadFormData);
+
+
+</script>
+
+{% endblock additional_scripts %}

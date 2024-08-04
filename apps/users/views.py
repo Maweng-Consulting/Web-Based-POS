@@ -9,6 +9,16 @@ from apps.users.models import Customer, User
 
 
 # Create your views here.
+def people_home(request):
+    customers_count = Customer.objects.count()
+    staff_count = User.objects.exclude(role__in=["Supplier", "Broker", "Customer"]).count()
+
+    context = {
+        "customers_count": customers_count,
+        "staff_count": staff_count
+    }
+    return render(request, "accounts/home.html", context)
+
 def register(request):
     if request.method == "POST":
         username = request.POST.get("username")
