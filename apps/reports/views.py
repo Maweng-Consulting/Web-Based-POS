@@ -10,12 +10,17 @@ from django.shortcuts import redirect, render
 
 from apps.inventory.models import Inventory
 from apps.pos.models import Order, OrderItem
-from apps.reports.models import ProductSale
+from apps.reports.models import ProductSale, Report
 from apps.users.models import User
 
 date_today = datetime.now().date()
 # Create your views here.
-
+def reports_home(request):
+    reports = Report.objects.all().order_by("id")
+    context = {
+        "reports": reports
+    }
+    return render(request, "reports/home.html", context)
 
 def sales_by_product(request):
     product_sales = ProductSale.objects.all().order_by("-created")
@@ -647,3 +652,72 @@ def general_sales_report(request):
 
     context = {"orders": orders, "page_obj": page_obj, "sellers": sellers}
     return render(request, "reports/general_sales.html", context)
+
+
+
+def sales_today(request):
+    weekly_sales = ProductSale.objects.filter(created__date=date_today).order_by("-created")
+
+    if request.method == "POST":
+        action_type = request.POST.get("action_type")
+        product_name = request.POST.get("weekly_product_name")
+        export_product_name = request.POST.get("product_name")
+        
+
+        if product_name:
+            weekly_sales = (
+                ProductSale.objects.filter(Q(item__name__icontains=product_name))
+            )
+
+        if action_type == "export":
+            weekly_and_daily_sales_export = ProductSale.objects.all()
+
+            if export_product_name:
+                weekly_and_daily_sales_export = ProductSale.objects.filter(
+                    Q(item__name__icontains=export_product_name)
+                )
+
+            response = HttpResponse(content_type="text/csv")
+            file_name = f'attachment; filename="Today Sales Report.csv"'
+            response["Content-Disposition"] = file_name
+            writer = csv.writer(response)
+            writer.writerow(
+                [
+                    "ID",
+                    "Sale Date",
+                    "Item Sold",
+                    "Unit Price",
+                    "Quantity",
+                    "Sales Total",
+                ]
+            )
+            weekly_sales_values = weekly_and_daily_sales_export.values_list(
+                "id",
+                "created__date",
+                "item__name",
+                "unit_price",
+                "total_quantity",
+                "total_price",
+            )
+
+            cummulative_total = sum(
+                list(
+                    weekly_and_daily_sales_export.values_list("total_price", flat=True)
+                )
+            )
+
+            for sale in weekly_sales_values:
+                writer.writerow(sale)
+
+            writer.writerow(["", "", "", "", "", "", ""])
+            writer.writerow(["Total Sales", "", "", "", "", "", cummulative_total])
+            return response
+
+
+    paginator = Paginator(weekly_sales, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    items = Inventory.objects.all()
+    context = {"page_obj": page_obj, "items": items}
+    return render(request, "reports/sales_today.html", context)
