@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import redirect, render
-
+from django.db.models import Q
 # Create your views here.
 from apps.users.models import Customer, User
 
@@ -62,7 +62,7 @@ def register(request):
             user.save()
             messages.success(request, f"User created successfully!!")
 
-            return redirect("staff")
+            return redirect("users")
 
     return render(request,"accounts/register.html")
 
@@ -207,6 +207,10 @@ def staff(request):
 
 def customers(request):
     customers = Customer.objects.all()
+
+    if request.method == "POST":
+        search_text = request.POST.get("search_text")
+        customers = Customer.objects.filter(Q(user__id_number__icontains=search_text))
 
     paginator = Paginator(customers, 12)
     page_number = request.GET.get("page")
