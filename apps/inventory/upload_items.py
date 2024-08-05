@@ -20,6 +20,7 @@ class UploadNewStockMixin(object):
                     buying_price=item["buying_price"].strip(),
                     selling_price=item["selling_price"].strip(),
                     quantity=item["quantity"].strip(),
+                    category_id=item["category"].strip(),
                     unit_of_measure=item["unit_of_measure"].strip(),
                 )
             )

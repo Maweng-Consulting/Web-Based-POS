@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+      <div class="card m-2" style="width: 16rem; height: 180px;">
+       
+        <div class="card-body">
+          <h5 class="card-title">Stock</h5>
+          <hr/>
+          <p class="card-text">Items Count: {{items_count}}</p>
+          <a href="{% url 'inventory' %}" class="btn btn-info">See List</a>
+        </div>
+      </div>
+
+      <div class="card m-2" style="width: 16rem; height: 180px;">
+        <div class="card-body">
+          <h5 class="card-title">Stock Logs</h5>
+          <hr/>
+          <p class="card-text">Logs Count: {{logs_count}}</p>
+          <a href="{% url 'stock-logs' %}" class="btn btn-info">See List</a>
+        </div>
+      </div>
+      <div class="card m-2" style="width: 16rem; height: 180px;">
+        <div class="card-body">
+          <h5 class="card-title">Categories</h5>
+          <hr/>
+          <p class="card-text">Count: {{categories_count}}</p>
+          <a href="{% url 'product-categories' %}" class="btn btn-info">See List</a>
+        </div>
+      </div>
+  </div>
+
+{% endblock %}
