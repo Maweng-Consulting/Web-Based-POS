@@ -12,23 +12,11 @@
       <form method="POST">
         {% csrf_token %}
         <div class="input-group mb-3">
-          <div class="row">
-            <div class="col-4">
+            <div class="col">
               <input type="text" class="form-control" name="search_text" id="search_text" placeholder="Order ID ...">
             </div>
-            <div class="col-4">
-              <select class="form-select" id="sale_type" name="sale_type">
-                <option value=""></option>
-                <option value="Paid">Paid Sale</option>
-                <option value="Credit">Credit Sale</option>
-              </select>
-            </div>
-            <div class="col-4">
-              <button class="btn btn-success">Search</button>
-            </div>
+            <input type="submit" hidden />
           </div>
-          
-        </div>
       </form>
     </div>
 </div>
