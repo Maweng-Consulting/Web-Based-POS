@@ -1,0 +1,30 @@
+<div class="modal fade" id="deliveryDetailsModal{{delivery.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Delivery Details</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        <div class="row">
+            <div class="col">
+                <h6>Customer</h6>
+                <p><span class="btn btn-info btn-sm"><i class="bi bi-person"></i></span><b> {{delivery.customer}}</b></p>
+                <p><span class="btn btn-info btn-sm"><i class="bi bi-telephone-minus"></i></span><b> {{delivery.customer.phone_number}}</b></p>
+                <p><span class="btn btn-info btn-sm"><i class="bi bi-envelope"></i></span><b> {{delivery.customer.email}}</b></p>
+            </div>
+            <div class="col"></div>
+        </div>
+        <hr/>
+        <div class="row">
+            <h6>Delivery Address</h6>
+            <p>{{delivery.delivery_address}}</p>
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>

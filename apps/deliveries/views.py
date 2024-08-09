@@ -7,8 +7,18 @@ from apps.deliveries.models import (
     DeliveryPartner,
     PickupStation,
     DeliveryStatusUpdate,
+    DeliveryDriver,
 )
 from apps.pos.models import Order
+
+DELIVERY_STATUS_CHOICES = [
+    "Delivered" "Transit",
+    "Pending Dispatch",
+    "Initiated",
+    "Dispatched",
+    "Abandoned",
+]
+DELIVERY_TYPE_CHOICES = ["Self Pickup", "Door Delivery", "Pickup Station"]
 
 
 # Create your views here.
@@ -16,11 +26,15 @@ def home(request):
     stations_count = PickupStation.objects.count()
     partners_count = DeliveryPartner.objects.count()
     deliveries_count = Delivery.objects.count()
+    drivers_count = DeliveryDriver.objects.count()
+    addresses_count = DeliveryAddress.objects.count()
 
     context = {
         "stations_count": stations_count,
         "deliveries_count": deliveries_count,
-        "partners_count": partners_count
+        "partners_count": partners_count,
+        "drivers_count": drivers_count,
+        "addresses_count": addresses_count,
     }
 
     return render(request, "deliveries/home.html", context)
@@ -102,6 +116,11 @@ def new_pickup_station(request):
 
 def deliveries(request):
     deliveries = Delivery.objects.all().order_by("-created")
+
+    delivery_partners = DeliveryPartner.objects.all().order_by("-id")
+    delivery_addresses = DeliveryAddress.objects.all().order_by("-id")
+    drivers = DeliveryDriver.objects.all().order_by("-id")
+
     if request.method == "POST":
         search_text = request.POST.get("search_text")
         deliveries = Delivery.objects.filter(
@@ -115,7 +134,14 @@ def deliveries(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    context = {"page_obj": page_obj}
+    context = {
+        "page_obj": page_obj,
+        "delivery_statuses": DELIVERY_STATUS_CHOICES,
+        "delivery_types": DELIVERY_TYPE_CHOICES,
+        "delivery_partners": delivery_partners,
+        "delivery_addresses": delivery_addresses,
+        "drivers": drivers
+    }
     return render(request, "deliveries/deliveries.html", context)
 
 
@@ -136,8 +162,17 @@ def new_delivery(request):
         DeliveryStatusUpdate.objects.create(
             delivery=delivery,
             previous_status="Initiated",
-            next_status="Pending Dispatch"
+            next_status="Pending Dispatch",
         )
 
         return redirect("deliveries")
     return render(request, "deliveries/new_delivery.html")
+
+
+def edit_delivery(request):
+    if request.method == "POST":
+        order_id = request.POST.get("order")
+        cost = request.POST.get("cost")
+        delivery_type = request.POST.get("delivery_type")
+
+    return render(request, "deliveries/edit_delivery.html")

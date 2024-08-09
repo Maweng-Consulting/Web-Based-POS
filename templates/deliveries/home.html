@@ -2,61 +2,55 @@
 
 {% block content %}
 <div class="row">
-    <div class="col">
-        <div class="card m-2">
-            <div class="card-body">
-              <h5 class="card-title">Deliveries</h5>
-              <hr/>
-              <p class="card-text">Count: {{deliveries_count}}</p>
-              <a href="{% url 'deliveries' %}" class="btn btn-info">See List</a>
-            </div>
-          </div>
-    </div>
-    <div class="col">
-        <div class="card m-2" style="">
-            <div class="card-body">
-              <h5 class="card-title">Partners</h5>
-              <hr/>
-              <p class="card-text">Count: {{partners_count}}</p>
-              <a href="{% url 'delivery-partners' %}" class="btn btn-info">See List</a>
-            </div>
-          </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-        <div class="card m-2" style="">
-            <div class="card-body">
-              <h5 class="card-title">Pickup Stations</h5>
-              <hr/>
-              <p class="card-text">Count: {{stations_count}}</p>
-              <a href="{% url 'pickup-stations' %}" class="btn btn-info">See List</a>
-            </div>
-          </div>
-    </div>
-    <div class="col">
-        <div class="card m-2" style="">
-            <div class="card-body">
-              <h5 class="card-title">Address</h5>
-              <hr/>
-              <p class="card-text">Amount: {{week_orders}}</p>
-              <a href="{% url 'weekly-and-daily-sales' %}" class="btn btn-info">See Report</a>
-            </div>
-          </div>
-    </div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Home</li>
+    </ol>
+</nav>
 </div>
 <div class="row">
-  <div class="col">
-      <div class="card m-2">
-          <div class="card-body">
-            <h5 class="card-title">Delivery Drivers/Riders</h5>
-            <hr/>
-            <p class="card-text">Count: {{stations_count}}</p>
-            <a href="#" class="btn btn-info">See List</a>
-          </div>
-        </div>
-  </div>
-  <div class="col">
-  </div>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Count</th>
+        <th>View List</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Deliveries</td>
+        <td>{{deliveries_count}}</td>
+        <td><a href="{% url 'deliveries' %}" class="btn btn-info">See List</a></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Delivery Partners</td>
+        <td>{{partners_count}}</td>
+        <td><a href="{% url 'delivery-partners' %}" class="btn btn-info">See List</a></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Pickup Stations</td>
+        <td>{{stations_count}}</td>
+        <td><a href="{% url 'pickup-stations' %}" class="btn btn-info">See List</a></td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Delivery Address</td>
+        <td>{{addresses_count}}</td>
+        <td><a href="#" class="btn btn-info">See List</a></td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Delivery Drivers/Riders</td>
+        <td>{{drivers_count}}</td>
+        <td><a href="#" class="btn btn-info">See List</a></td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 {% endblock %}

@@ -2,13 +2,20 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'deliveries-home' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Deliveries</li>
+    </ol>
+</nav>
+</div>
+<div class="row">
+    <div class="col">
         <h3>Deliveries</h3>
     </div>
-    <div class="col-4">
-        <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newDeliveryModal">New Delivery</a>
-    </div>
-    <div class="col-4">
+    
+    <div class="col">
       <form method="POST">
         {% csrf_token %}
         <div class="input-group mb-3">
@@ -33,7 +40,7 @@
               <th scope="col">Cost</th>
               <th scope="col">Type</th>
               <th scope="col">Status</th>
-              <th scope="col" colspan="2"></th>
+              <th scope="col" colspan="3"></th>
             </tr>
           </thead>
           <tbody>
@@ -45,7 +52,10 @@
               <td>{{delivery.cost}}</td>
               <td>{{delivery.delivery_type}}</td>
               <td>{{delivery.delivery_status}}</td>
-              <td><a class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editPartnerModal{{ delivery.id }}">
+              <td>
+                <a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#deliveryDetailsModal{{ delivery.id }}"><i class="bi bi-eye-fill"></i></a>
+              </td>
+              <td><a class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDeliveryModal{{ delivery.id }}">
                 <i class="bi bi-pencil-square"></i>
               </a></td>
               <td><a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePartnerModal{{ delivery.id }}">
@@ -55,6 +65,7 @@
             
             {% include "deliveries/edit_delivery.html" %}
             {% include "deliveries/delete_delivery.html" %}
+            {% include "deliveries/delivery_details.html" %}
             {% endfor %}
 
           </tbody>
