@@ -8,6 +8,7 @@ from apps.reports.models import ProductSale, Report
 class ReportAdmin(admin.ModelAdmin):
     list_display = ["id", "name", "report_url"]
 
+
 @admin.register(ProductSale)
 class ProductSaleAdmin(admin.ModelAdmin):
     list_display = [

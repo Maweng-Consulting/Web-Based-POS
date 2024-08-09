@@ -1,9 +1,20 @@
 from django.urls import path
 
-from apps.users.views import (create_customer_at_pos, customers,
-                              delete_customer, delete_staff, edit_customer,
-                              edit_staff, new_customer, new_staff, register,
-                              staff, user_login, user_logout, people_home)
+from apps.users.views import (
+    create_customer_at_pos,
+    customers,
+    delete_customer,
+    delete_staff,
+    edit_customer,
+    edit_staff,
+    new_customer,
+    new_staff,
+    register,
+    staff,
+    user_login,
+    user_logout,
+    people_home,
+)
 
 urlpatterns = [
     path("", people_home, name="people"),

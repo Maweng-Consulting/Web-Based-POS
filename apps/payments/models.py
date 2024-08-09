@@ -14,7 +14,9 @@ INVOICE_STATUS_CHOICES = (
 
 
 class SupplyInvoice(AbstractBaseModel):
-    supplier = models.ForeignKey("suppliers.Supplier", related_name="supplierinvoices", on_delete=models.CASCADE)
+    supplier = models.ForeignKey(
+        "suppliers.Supplier", related_name="supplierinvoices", on_delete=models.CASCADE
+    )
     amount_expected = models.DecimalField(max_digits=100, decimal_places=2, default=0)
     amount_paid = models.DecimalField(max_digits=100, decimal_places=2, default=0)
     date_supplied = models.DateField()

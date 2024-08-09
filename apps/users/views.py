@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import redirect, render
 from django.db.models import Q
+
 # Create your views here.
 from apps.users.models import Customer, User
 
@@ -11,13 +12,13 @@ from apps.users.models import Customer, User
 # Create your views here.
 def people_home(request):
     customers_count = Customer.objects.count()
-    staff_count = User.objects.exclude(role__in=["Supplier", "Broker", "Customer"]).count()
+    staff_count = User.objects.exclude(
+        role__in=["Supplier", "Broker", "Customer"]
+    ).count()
 
-    context = {
-        "customers_count": customers_count,
-        "staff_count": staff_count
-    }
+    context = {"customers_count": customers_count, "staff_count": staff_count}
     return render(request, "accounts/home.html", context)
+
 
 def register(request):
     if request.method == "POST":
@@ -64,8 +65,7 @@ def register(request):
 
             return redirect("users")
 
-    return render(request,"accounts/register.html")
-
+    return render(request, "accounts/register.html")
 
 
 @login_required(login_url="/users/login/")
@@ -240,7 +240,7 @@ def new_customer(request):
             phone_number=phone_number,
             gender=gender,
             id_number=id_number,
-            role="Customer"
+            role="Customer",
         )
         user.set_password(id_number)
         user.save()
@@ -277,7 +277,7 @@ def edit_customer(request):
         customer.country = country
         customer.save()
 
-        customer.user.first_name =first_name
+        customer.user.first_name = first_name
         customer.user.last_name = last_name
         customer.user.email = email
         customer.user.username = email
@@ -288,7 +288,7 @@ def edit_customer(request):
         customer.user.save()
         customer.user.set_password(id_number)
         customer.user.save()
-        
+
         return redirect("customers")
     return render(request, "customers/edit_customer.html")
 
@@ -323,7 +323,7 @@ def create_customer_at_pos(request):
             phone_number=phone_number,
             gender=gender,
             id_number=id_number,
-            role="Customer"
+            role="Customer",
         )
         user.set_password(id_number)
         user.save()

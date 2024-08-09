@@ -1,4 +1,6 @@
 from apps.inventory.models import Inventory, InventoryLog
+
+
 class UploadNewStockMixin(object):
     def __init__(self, data):
         self.data = data
@@ -13,7 +15,7 @@ class UploadNewStockMixin(object):
 
         for item in items:
             print(item)
-        
+
             items_list.append(
                 Inventory(
                     name=item["name"].strip(),
@@ -24,6 +26,6 @@ class UploadNewStockMixin(object):
                     unit_of_measure=item["unit_of_measure"].strip(),
                 )
             )
-            
+
         Inventory.objects.bulk_create(items_list)
         print("*******Products Created Successfully!!************")

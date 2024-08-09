@@ -42,7 +42,9 @@ class Order(AbstractBaseModel):
     )
     order_receipt = models.FileField(upload_to="receipts/", null=True)
     order_type = models.CharField(max_length=255, choices=ORDER_TYPES, null=True)
-    order_source = models.CharField(max_length=255, choices=ORDER_SOURCE, default="Store")
+    order_source = models.CharField(
+        max_length=255, choices=ORDER_SOURCE, default="Store"
+    )
 
     def __str__(self):
         return str(self.id)

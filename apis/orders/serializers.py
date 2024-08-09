@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from apps.pos.models import Order, OrderItem
 
+
 class PlaceOrderSerializer(serializers.Serializer):
     items = serializers.JSONField(default=list)
     total_cost = serializers.DecimalField(max_digits=100, decimal_places=2)

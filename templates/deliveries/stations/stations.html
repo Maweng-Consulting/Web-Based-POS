@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-4">
+        <h3>Pickup Stations</h3>
+    </div>
+    <div class="col-4">
+        <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newStationModal">New Station</a>
+    </div>
+    <div class="col-4">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          <div class="row">
+            <div class="col">
+              <input type="text" class="form-control" name="search_text" id="search_text" placeholder="Name.." >
+            </div>
+          </div>
+        </div>
+        <input type="submit" hidden />
+        
+      </form>
+    </div>
+</div>
+<hr/>
+      <div class="table-responsive small">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Phone Number</th>
+              <th scope="col">County</th>
+              <th scope="col">Town</th>
+              <th scope="col" colspan="2"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for station in page_obj %}
+            <tr>
+              <td>{{station.id}}</td>
+              <td>{{station.name}}</td>
+              <td>{{station.phone_number}}</td>
+              <td>{{station.county}}</td>
+              <td>{{station.town}}, {{station.country}}</td>
+              <td><a class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editStationModal{{ station.id }}">
+                <i class="bi bi-pencil-square"></i>
+              </a></td>
+              <td><a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteStationModal{{ station.id }}">
+                <i class="bi bi-trash"></i>
+              </a></td>
+            </tr>
+            
+            {% include "deliveries/stations/edit_station.html" %}
+            {% include "deliveries/stations/delete_station.html" %}
+            {% endfor %}
+
+          </tbody>
+        </table>
+        <div>
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+              {% if page_obj.has_previous %}   
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+              {% endif %}
+              <a class="page-link" href="#">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a>
+              {% if page_obj.has_next %}    
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+              {% endif %}   
+            </ul>
+          </nav>
+        </div>
+      </div>
+{% endblock content %}

@@ -13,6 +13,7 @@ ROLE_CHOICES = (
     ("broker", "Broker"),
     ("Supplier", "Supplier"),
     ("Customer", "Customer"),
+    ("Driver", "Driver"),
 )
 
 

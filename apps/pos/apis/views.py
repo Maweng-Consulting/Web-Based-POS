@@ -2,7 +2,10 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from apps.pos.apis.serializers import SessionCreateSerializer, CustomerOrderPaidSerializer
+from apps.pos.apis.serializers import (
+    SessionCreateSerializer,
+    CustomerOrderPaidSerializer,
+)
 from apps.users.models import Customer
 from apps.pos.models import Order, TemporaryCustomerCartItem
 
@@ -21,7 +24,7 @@ class SessionCreateAPIView(generics.CreateAPIView):
         if serializer.is_valid(raise_exception=True):
             customer_id = serializer.validated_data["customer_id"]
             customer = Customer.objects.get(id=customer_id)
-            
+
             request.session[f"selected_customer_{cashier_id}"] = {
                 "id": customer.id,
                 "name": customer.name,
@@ -52,9 +55,7 @@ class CustomerOrderPaidAPIView(generics.CreateAPIView):
 
             order = Order.objects.get(id=order_id)
             items = TemporaryCustomerCartItem.objects.filter(
-                order=order,
-                cashier_id=cashier_id,
-                customer_id=customer_id
+                order=order, cashier_id=cashier_id, customer_id=customer_id
             )
 
             items.delete()

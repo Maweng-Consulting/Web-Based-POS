@@ -1,0 +1,37 @@
+<div class="modal fade" id="newDeliveryModal{{order.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-center">Initiate Delivery</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+            <form action="{% url 'new-delivery' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="text" id="order" name="order" value="{{order.id}}" hidden />
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Delivery Type</label>
+                      <select class="form-select" id="delivery_type" name="delivery_type">
+                          <option value="Self Pickup">Self Pickup</option>
+                          <option value="Door Delivery">Doorstep Delivery</option>
+                          <option value="Pickup Station">Pickup Station Delivery</option>
+                        </select>
+                    </div>                
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label fw-bold">Delivery Cost</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="cost"
+                    name="cost"
+                    required
+                  />
+                </div>                
+                <div class="text-center mt-2">
+                  <button type="submit" class="btn btn-primary">Initiate Delivery</button>
+                </div>
+              </div>
+              </form>
+      </div>
+    </div>
+  </div>

@@ -17,6 +17,7 @@ from apps.core.models import MeasureUnit
 
 fs = FileSystemStorage(location="temp")
 
+
 # Create your views here.
 @login_required(login_url="/users/login/")
 def inventory_home(request):
@@ -27,7 +28,7 @@ def inventory_home(request):
     context = {
         "items_count": items_count,
         "logs_count": logs_count,
-        "categories_count": categories_count
+        "categories_count": categories_count,
     }
 
     return render(request, "inventory/home.html", context)
@@ -48,6 +49,7 @@ def categories(request):
     context = {"page_obj": page_obj}
     return render(request, "categories/categories.html", context)
 
+
 @login_required(login_url="/users/login/")
 def new_category(request):
     if request.method == "POST":
@@ -55,6 +57,7 @@ def new_category(request):
         ProductCategory.objects.create(name=name)
         return redirect("product-categories")
     return render(request, "categories/new_category.html")
+
 
 @login_required(login_url="/users/login/")
 def edit_category(request):
@@ -67,6 +70,7 @@ def edit_category(request):
         category.save()
         return redirect("product-categories")
     return render(request, "categories/edit_category.html")
+
 
 @login_required(login_url="/users/login/")
 def delete_category(request):
@@ -114,7 +118,13 @@ def inventory(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    context = {"stock_items": stock_items, "page_obj": page_obj, "suppliers": suppliers, "categories": categories, "measure_units": measure_units}
+    context = {
+        "stock_items": stock_items,
+        "page_obj": page_obj,
+        "suppliers": suppliers,
+        "categories": categories,
+        "measure_units": measure_units,
+    }
     return render(request, "inventory/inventory.html", context)
 
 
@@ -312,9 +322,7 @@ def upload_stock_items(request):
 
         source_file_content = stock_file.read()
         source_file_content = ContentFile(source_file_content)
-        source_file_name = fs.save(
-            "temp_source_file.csv", source_file_content
-        )
+        source_file_name = fs.save("temp_source_file.csv", source_file_content)
         temp_source_file = fs.path(source_file_name)
         with open(temp_source_file) as f:
             data = list(csv.DictReader(f))

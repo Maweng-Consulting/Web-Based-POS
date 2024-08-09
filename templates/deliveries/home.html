@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <div class="card m-2">
+            <div class="card-body">
+              <h5 class="card-title">Deliveries</h5>
+              <hr/>
+              <p class="card-text">Count: {{deliveries_count}}</p>
+              <a href="{% url 'deliveries' %}" class="btn btn-info">See List</a>
+            </div>
+          </div>
+    </div>
+    <div class="col">
+        <div class="card m-2" style="">
+            <div class="card-body">
+              <h5 class="card-title">Partners</h5>
+              <hr/>
+              <p class="card-text">Count: {{partners_count}}</p>
+              <a href="{% url 'delivery-partners' %}" class="btn btn-info">See List</a>
+            </div>
+          </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+        <div class="card m-2" style="">
+            <div class="card-body">
+              <h5 class="card-title">Pickup Stations</h5>
+              <hr/>
+              <p class="card-text">Count: {{stations_count}}</p>
+              <a href="{% url 'pickup-stations' %}" class="btn btn-info">See List</a>
+            </div>
+          </div>
+    </div>
+    <div class="col">
+        <div class="card m-2" style="">
+            <div class="card-body">
+              <h5 class="card-title">Address</h5>
+              <hr/>
+              <p class="card-text">Amount: {{week_orders}}</p>
+              <a href="{% url 'weekly-and-daily-sales' %}" class="btn btn-info">See Report</a>
+            </div>
+          </div>
+    </div>
+</div>
+<div class="row">
+  <div class="col">
+      <div class="card m-2">
+          <div class="card-body">
+            <h5 class="card-title">Delivery Drivers/Riders</h5>
+            <hr/>
+            <p class="card-text">Count: {{stations_count}}</p>
+            <a href="#" class="btn btn-info">See List</a>
+          </div>
+        </div>
+  </div>
+  <div class="col">
+  </div>
+</div>
+{% endblock %}

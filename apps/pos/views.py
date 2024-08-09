@@ -19,8 +19,7 @@ from apps.core.custom_pagination import NoPagination
 
 from apps.inventory.models import Inventory, MpesaPayment
 from apps.pos.generate_receipt import render_to_pdf
-from apps.pos.models import (CreditOrder, Order, OrderItem,
-                             TemporaryCustomerCartItem)
+from apps.pos.models import CreditOrder, Order, OrderItem, TemporaryCustomerCartItem
 from apps.pos.serializers import InventorySerializer, MpesaPaymentSerializer
 from apps.reports.models import MontlyProductSale, ProductSale
 from apps.users.models import Customer, User
@@ -107,7 +106,6 @@ def sales_point(request):
     if request.method == "POST":
         new_amount = float(request.POST.get("new_amount"))
         item_id = request.POST.get("item_id")
-        
 
         temp_item = TemporaryCustomerCartItem.objects.filter(
             id=item_id,
@@ -125,7 +123,6 @@ def sales_point(request):
         print(f"Item ID: {item_id}, New Amount: {new_amount}")
         print(f"Item ID: {temp_item.id} Current Amount: {temp_item.quantity}")
 
-
         if new_amount <= float(temp_item.item.quantity):
             temp_item.quantity = new_amount
             temp_item.price = temp_item.item.selling_price * Decimal(new_amount)
@@ -136,7 +133,6 @@ def sales_point(request):
 
         else:
             return redirect("sales-point")
-        
 
     print(f"User ID: {user.id}, Cashier ID: {cashier_id}")
     items = Inventory.objects.all()
@@ -144,9 +140,13 @@ def sales_point(request):
     cart_items = TemporaryCustomerCartItem.objects.filter(
         user=user, cashier_id=cashier_id, customer_id=selected_customer["id"]
     )
-    
+
     order_is_paid = cart_items.first().paid if cart_items else False
-    order_id = cart_items.first().order.id if (cart_items and cart_items.first().order) else None
+    order_id = (
+        cart_items.first().order.id
+        if (cart_items and cart_items.first().order)
+        else None
+    )
 
     total_cost = sum(list(cart_items.values_list("price", flat=True)))
 
@@ -167,7 +167,7 @@ def sales_point(request):
         "current_time": current_time,
         "order_is_paid": order_is_paid,
         "user": user,
-        "order_id": order_id
+        "order_id": order_id,
     }
     return render(request, "pos/sale.html", context)
 
@@ -288,7 +288,7 @@ def mark_order_as_paid(request, user_id=None):
             )
 
     temp_items.update(paid=True, order=order)
-    #del request.session[f"selected_customer_{cashier_id}"]
+    # del request.session[f"selected_customer_{cashier_id}"]
     return redirect("sales-point")
 
 
@@ -336,7 +336,9 @@ def update_cart_items(request, item_id=None, user_id=None):
 
         if new_amount <= temp_item.item.quantity:
             temp_item.quantity += new_amount
-            temp_item.price = temp_item.item.price * Decimal(new_amount) + temp_item.item.price
+            temp_item.price = (
+                temp_item.item.price * Decimal(new_amount) + temp_item.item.price
+            )
             temp_item.save()
         else:
             return redirect("sales-point")

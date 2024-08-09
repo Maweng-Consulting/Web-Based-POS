@@ -5,6 +5,7 @@ from apps.users.models import User, Customer
 
 from apis.users.serializers import RegisterUserSerializer
 
+
 class RegisterUserAPIView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterUserSerializer
@@ -16,9 +17,7 @@ class RegisterUserAPIView(generics.CreateAPIView):
             user = serializer.save()
             user.set_password(user.password)
             user.save()
-            Customer.objects.create(
-                user=user
-            )
+            Customer.objects.create(user=user)
             return Response(
                 {"message": "User registered successfully"},
                 status=status.HTTP_201_CREATED,

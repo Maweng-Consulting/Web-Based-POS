@@ -33,7 +33,7 @@
               <th scope="col">Cost</th>
               <th scope="col">Status</th>
               <th scope="col">Sale Type</th>
-              <th scope="col" colspan="2">Actions</th>
+              <th scope="col" colspan="3">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -52,9 +52,14 @@
               <td><a href="#" data-bs-toggle="modal" data-bs-target="#emailReceiptModal" class="btn btn-warning btn-sm">
                 <i class="bi bi-envelope"></i>
               </a></td>
+              <td><a href="#" data-bs-toggle="modal" data-bs-target="#newDeliveryModal{{order.id}}" class="btn btn-info btn-sm">
+                <i class="bi bi-truck"></i>
+              </a></td>
             </tr>
+            
             {% include "orders/order_items.html" %}
             {% include "orders/email_order_receipt.html" %}
+            {% include "deliveries/new_delivery.html" %}
            
             {% endfor %}
 
