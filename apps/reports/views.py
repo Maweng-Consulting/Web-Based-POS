@@ -14,13 +14,14 @@ from apps.reports.models import ProductSale, Report
 from apps.users.models import User
 
 date_today = datetime.now().date()
+
+
 # Create your views here.
 def reports_home(request):
     reports = Report.objects.all().order_by("id")
-    context = {
-        "reports": reports
-    }
+    context = {"reports": reports}
     return render(request, "reports/home.html", context)
+
 
 def sales_by_product(request):
     product_sales = ProductSale.objects.all().order_by("-created")
@@ -78,7 +79,9 @@ def sales_by_product(request):
         if action_type == "export":
             product_sales_export = ProductSale.objects.all()
 
-            print(f"Product: {product_name}, Month: {product_sale_month}, Year: {product_sale_year}")
+            print(
+                f"Product: {product_name}, Month: {product_sale_month}, Year: {product_sale_year}"
+            )
 
             report_name = "Product Sales Report"
 
@@ -187,7 +190,6 @@ def monthly_sales(request):
         product_name = request.POST.get("product_name")
         sales_year = request.POST.get("sales_year")
         sales_month = request.POST.get("sales_month")
-        
 
         year = request.POST.get("year")
         month = request.POST.get("month")
@@ -208,17 +210,26 @@ def monthly_sales(request):
         print(f"Action Type: {action_type}, Year: {sales_year}, Month: {sales_month}")
 
         if month_product and year and month:
-            monthly_sales = ProductSale.objects.filter(item__name=month_product).filter(created__year=year).filter(created__month=month)
+            monthly_sales = (
+                ProductSale.objects.filter(item__name=month_product)
+                .filter(created__year=year)
+                .filter(created__month=month)
+            )
 
-        
         elif month_product and year:
-            monthly_sales = ProductSale.objects.filter(item__name=month_product).filter(created__year=year)
+            monthly_sales = ProductSale.objects.filter(item__name=month_product).filter(
+                created__year=year
+            )
 
         elif month_product and month:
-            monthly_sales = ProductSale.objects.filter(item__name=month_product).filter(created__month=month)
+            monthly_sales = ProductSale.objects.filter(item__name=month_product).filter(
+                created__month=month
+            )
 
         elif year and month:
-            monthly_sales = ProductSale.objects.filter(created__year=year).filter(created__month=month)
+            monthly_sales = ProductSale.objects.filter(created__year=year).filter(
+                created__month=month
+            )
 
         elif month_product:
             monthly_sales = ProductSale.objects.filter(item__name=month_product)
@@ -235,31 +246,49 @@ def monthly_sales(request):
             report_name = "Monthly Sales Report"
 
             if product_name and sales_year and sales_month:
-                monthly_sales_export = ProductSale.objects.filter(item__name=product_name).filter(created__year=sales_year).filter(created__month=sales_month)
+                monthly_sales_export = (
+                    ProductSale.objects.filter(item__name=product_name)
+                    .filter(created__year=sales_year)
+                    .filter(created__month=sales_month)
+                )
                 report_name = f"{product_name} Sales Report-{calendar.month_name[sales_month]}-{sales_year}"
 
             elif product_name and sales_year:
-                monthly_sales_export = ProductSale.objects.filter(item__name=product_name).filter(created__year=sales_year)
+                monthly_sales_export = ProductSale.objects.filter(
+                    item__name=product_name
+                ).filter(created__year=sales_year)
                 report_name = f"{product_name} Sales Report-{sales_year}"
 
             elif product_name and sales_month:
-                monthly_sales_export = ProductSale.objects.filter(item__name=product_name).filter(created__month=sales_month)
-                report_name = f"{product_name} Sales Report-{calendar.month_name[sales_month]}"
+                monthly_sales_export = ProductSale.objects.filter(
+                    item__name=product_name
+                ).filter(created__month=sales_month)
+                report_name = (
+                    f"{product_name} Sales Report-{calendar.month_name[sales_month]}"
+                )
 
             elif sales_year and sales_month:
-                monthly_sales_export = ProductSale.objects.filter(created__year=sales_year).filter(created__month=sales_month)
+                monthly_sales_export = ProductSale.objects.filter(
+                    created__year=sales_year
+                ).filter(created__month=sales_month)
                 report_name = f"Monthly Sales Report-{calendar.month_name[sales_month]}-{sales_year}"
 
             elif product_name:
-                monthly_sales_export = ProductSale.objects.filter(item__name=product_name)
+                monthly_sales_export = ProductSale.objects.filter(
+                    item__name=product_name
+                )
                 report_name = f"{product_name} Sales Report"
 
             elif sales_year:
-                monthly_sales_export = ProductSale.objects.filter(created__year=sales_year)
+                monthly_sales_export = ProductSale.objects.filter(
+                    created__year=sales_year
+                )
                 report_name = f"Monthly Sales Report-{sales_year}"
 
             elif sales_month:
-                monthly_sales_export = ProductSale.objects.filter(created__month=sales_month)
+                monthly_sales_export = ProductSale.objects.filter(
+                    created__month=sales_month
+                )
                 report_name = f"Monthly Sales Report-{calendar.month_name[sales_month]}"
 
             response = HttpResponse(content_type="text/csv")
@@ -654,19 +683,19 @@ def general_sales_report(request):
     return render(request, "reports/general_sales.html", context)
 
 
-
 def sales_today(request):
-    weekly_sales = ProductSale.objects.filter(created__date=date_today).order_by("-created")
+    weekly_sales = ProductSale.objects.filter(created__date=date_today).order_by(
+        "-created"
+    )
 
     if request.method == "POST":
         action_type = request.POST.get("action_type")
         product_name = request.POST.get("weekly_product_name")
         export_product_name = request.POST.get("product_name")
-        
 
         if product_name:
-            weekly_sales = (
-                ProductSale.objects.filter(Q(item__name__icontains=product_name))
+            weekly_sales = ProductSale.objects.filter(
+                Q(item__name__icontains=product_name)
             )
 
         if action_type == "export":
@@ -712,7 +741,6 @@ def sales_today(request):
             writer.writerow(["", "", "", "", "", "", ""])
             writer.writerow(["Total Sales", "", "", "", "", "", cummulative_total])
             return response
-
 
     paginator = Paginator(weekly_sales, 10)
     page_number = request.GET.get("page")

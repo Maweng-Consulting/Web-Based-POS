@@ -3,6 +3,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from apps.core.models import AbstractBaseModel
+
+
 # Create your models here.
 class Report(AbstractBaseModel):
     name = models.CharField(max_length=255)
@@ -10,6 +12,7 @@ class Report(AbstractBaseModel):
 
     def __str__(self):
         return self.name
+
 
 class ProductSale(AbstractBaseModel):
     order = models.ForeignKey("pos.Order", on_delete=models.CASCADE)

@@ -1,7 +1,6 @@
 from django.urls import path
 
-from apps.payments.views import (edit_invoice, invoices, new_invoice,
-                                 pay_invoice)
+from apps.payments.views import edit_invoice, invoices, new_invoice, pay_invoice
 
 urlpatterns = [
     path("invoices/", invoices, name="invoices"),

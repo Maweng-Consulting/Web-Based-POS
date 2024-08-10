@@ -8,12 +8,14 @@
     <div class="col">
         <h3>Stock</h3>
     </div>
+    {% if request.user.role == "admin" %}
     <div class="col">
         <a class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#newStockItemModal">New Stock Item</a>
     </div>
     <div class="col">
       <a class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#uploadStockItemsModal">Upload New Items</a>
   </div>
+  {% endif %}
     <div class="col">
       <form method="POST">
         {% csrf_token %}

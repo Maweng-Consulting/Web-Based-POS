@@ -6,7 +6,7 @@ def find_dominant_element(nums):
     for num in nums:
         if count == 0:
             candidate = num
-        count += (1 if num == candidate else -1)
+        count += 1 if num == candidate else -1
 
     # Phase 2: Verify the candidate
     if nums.count(candidate) > len(nums) // 2:
@@ -14,7 +14,12 @@ def find_dominant_element(nums):
     else:
         return None
 
+
 # Example usage
-nums = [2,2,1,1,1,2,2]
+nums = [2, 2, 1, 1, 1, 2, 2]
 dominant_element = find_dominant_element(nums)
-print(f"The dominant element is: {dominant_element}" if dominant_element else "No dominant element found.")
+print(
+    f"The dominant element is: {dominant_element}"
+    if dominant_element
+    else "No dominant element found."
+)

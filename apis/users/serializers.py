@@ -9,11 +9,11 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
 
         # Add custom claims
-        token['name'] = user.name
+        token["name"] = user.name
         # ...
 
         return token
-    
+
 
 class RegisterUserSerializer(serializers.ModelSerializer):
     class Meta:

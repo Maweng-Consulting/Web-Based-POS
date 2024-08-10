@@ -1,0 +1,73 @@
+<div class="modal fade" id="editDeliveryModal{{delivery.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-center">Update Delivery</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+            <form action="#" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                 
+                    <input type="text" id="order" name="order" value="{{order.id}}" hidden />
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Delivery Partner</label>
+                            <select class="form-select" id="delivery_partner" name="delivery_partner" value="{{delivery.delivery_partner.id}}">
+                                <option value="{{delivery.delivery_partner.id}}">{{delivery.delivery_partner.name}}</option>
+                                {% for delivery_partner in delivery_partners %}
+                                      <option value="{{delivery_partner.id}}">{{delivery_partner.name}}</option>
+                                {% endfor %}
+                              </select>
+                          </div>  
+                          <div class="mb-3">
+                              <label class="form-label fw-bold">Delivery Address</label>
+                              {% if delivery.delivery_type == "Door Delivery" %}
+                              <select class="form-select" id="address" name="address" value="{{delivery.address.id}}">
+                                <option value="{{delivery.address.id}}">{{delivery.address}}</option>
+                              {% for delivery_address in delivery_addresses %}
+                                    <option value="{{delivery.address.id}}">{{delivery.address}}</option>
+                              {% endfor %}
+                            </select>
+                              {% elif delivery.delivery_type == "Pickup Station" %}
+                                <select class="form-select" id="address" name="address" value="{{delivery.address.id}}">
+                                    <option value="{{delivery.address.id}}">{{delivery.address}}</option>
+                                  {% for delivery_address in delivery_addresses %}
+                                        <option value="{{delivery.address.id}}">{{delivery.address}}</option>
+                                  {% endfor %}
+                                </select>
+                                {% endif %}
+                            </div>               
+                    
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Delivery Status</label>
+                            <select class="form-select" id="delivery_status" name="delivery_status" value="{{delivery.delivery_status}}">
+                                  <option value="{{delivery.delivery_status}}">{{delivery.delivery_status}}</option>
+                                  {% for delivery_status in delivery_statuses %}
+                                    {% if delivery_status != delivery.delivery_status %}
+                                        <option value="{{delivery_status}}">{{delivery_status}}</option>
+                                    {% endif %}
+                                  {% endfor %}
+                            </select>
+                        </div>               
+                    
+                    <div class="col">
+                        <label class="form-label fw-bold">Delivery Driver</label>
+                        <select class="form-select" id="driver" name="driver" value="{{delivery.driver.id}}">
+                            <option value="{{delivery.driver.id}}">{{delivery.driver.user}}</option>
+                            {% for driver in drivers %}
+                              {% if driver.id != delivery.driver.id %}
+                                  <option value="{{driver.id}}">{{driver.user}}</option>
+                              {% endif %}
+                            {% endfor %}
+                          </select>
+                      </div>               
+                    
+                           
+                <div class="text-center mt-2">
+                  <button type="submit" class="btn btn-primary">Submit Delivery</button>
+                </div>
+              </div>
+              </form>
+      </div>
+    </div>
+  </div>

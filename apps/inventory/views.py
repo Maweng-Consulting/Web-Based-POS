@@ -17,7 +17,71 @@ from apps.core.models import MeasureUnit
 
 fs = FileSystemStorage(location="temp")
 
+
 # Create your views here.
+@login_required(login_url="/users/login/")
+def inventory_home(request):
+    items_count = Inventory.objects.count()
+    logs_count = InventoryLog.objects.count()
+    categories_count = ProductCategory.objects.count()
+
+    context = {
+        "items_count": items_count,
+        "logs_count": logs_count,
+        "categories_count": categories_count,
+    }
+
+    return render(request, "inventory/home.html", context)
+
+
+@login_required(login_url="/users/login/")
+def categories(request):
+    categories = ProductCategory.objects.all().order_by("-created")
+
+    if request.method == "POST":
+        search_text = request.POST.get("search_text")
+        categories = ProductCategory.objects.filter(Q(name__icontains=search_text))
+
+    paginator = Paginator(categories, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    context = {"page_obj": page_obj}
+    return render(request, "categories/categories.html", context)
+
+
+@login_required(login_url="/users/login/")
+def new_category(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        ProductCategory.objects.create(name=name)
+        return redirect("product-categories")
+    return render(request, "categories/new_category.html")
+
+
+@login_required(login_url="/users/login/")
+def edit_category(request):
+    if request.method == "POST":
+        category_id = request.POST.get("category")
+        name = request.POST.get("name")
+
+        category = ProductCategory.objects.get(id=category_id)
+        category.name = name
+        category.save()
+        return redirect("product-categories")
+    return render(request, "categories/edit_category.html")
+
+
+@login_required(login_url="/users/login/")
+def delete_category(request):
+    if request.method == "POST":
+        category_id = request.POST.get("category")
+        category = ProductCategory.objects.get(id=category_id)
+        category.delete()
+        return redirect("product-categories")
+    return render(request, "categories/edit_category.html")
+
+
 @login_required(login_url="/users/login/")
 def stock_logs(request):
     stock_logs = InventoryLog.objects.all().order_by("-created")
@@ -54,7 +118,13 @@ def inventory(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    context = {"stock_items": stock_items, "page_obj": page_obj, "suppliers": suppliers, "categories": categories, "measure_units": measure_units}
+    context = {
+        "stock_items": stock_items,
+        "page_obj": page_obj,
+        "suppliers": suppliers,
+        "categories": categories,
+        "measure_units": measure_units,
+    }
     return render(request, "inventory/inventory.html", context)
 
 
@@ -252,9 +322,7 @@ def upload_stock_items(request):
 
         source_file_content = stock_file.read()
         source_file_content = ContentFile(source_file_content)
-        source_file_name = fs.save(
-            "temp_source_file.csv", source_file_content
-        )
+        source_file_name = fs.save("temp_source_file.csv", source_file_content)
         temp_source_file = fs.path(source_file_name)
         with open(temp_source_file) as f:
             data = list(csv.DictReader(f))

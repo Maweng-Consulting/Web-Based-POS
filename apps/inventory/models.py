@@ -37,13 +37,16 @@ class ProductCategory(AbstractBaseModel):
     def __str__(self):
         return self.name
 
+
 class Inventory(AbstractBaseModel):
     category = models.ForeignKey(ProductCategory, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=255)
     buying_price = models.DecimalField(max_digits=100, decimal_places=2)
     selling_price = models.DecimalField(max_digits=100, decimal_places=2)
     quantity = models.FloatField(default=0)
-    unit_of_measure = models.ForeignKey(MeasureUnit, on_delete=models.SET_NULL, null=True)
+    unit_of_measure = models.ForeignKey(
+        MeasureUnit, on_delete=models.SET_NULL, null=True
+    )
     brand = models.CharField(max_length=255, null=True)
     image = models.ImageField(upload_to="product_images/", null=True)
 
@@ -52,7 +55,9 @@ class Inventory(AbstractBaseModel):
 
 
 class ProductImage(AbstractBaseModel):
-    product = models.ForeignKey(Inventory, on_delete=models.CASCADE, related_name="productimages")
+    product = models.ForeignKey(
+        Inventory, on_delete=models.CASCADE, related_name="productimages"
+    )
     image = models.ImageField(upload_to="product_images")
 
     def __str__(self):
