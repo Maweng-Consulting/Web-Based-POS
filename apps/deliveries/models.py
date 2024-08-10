@@ -17,6 +17,18 @@ DELIVERY_STYPE = (
     ("Pickup Station", "Pickup Station"),
 )
 
+class County(AbstractBaseModel):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+    
+class Town(AbstractBaseModel):
+    name = models.CharField(max_length=255)
+    county = models.ForeignKey(County, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 class DeliveryPartner(AbstractBaseModel):
     name = models.CharField(max_length=255)
@@ -43,8 +55,8 @@ class DeliveryDriver(AbstractBaseModel):
 
 class PickupStation(AbstractBaseModel):
     name = models.CharField(max_length=255)
-    town = models.CharField(max_length=255)
-    county = models.CharField(max_length=255, null=True)
+    town = models.ForeignKey(Town, on_delete=models.SET_NULL, null=True)
+    county = models.ForeignKey(County, on_delete=models.SET_NULL, null=True)
     country = models.CharField(max_length=255)
     description = models.TextField(null=True)
     phone_number = models.CharField(max_length=255, null=True)
@@ -55,9 +67,7 @@ class PickupStation(AbstractBaseModel):
 
 class DeliveryAddress(AbstractBaseModel):
     customer = models.ForeignKey("users.Customer", on_delete=models.CASCADE)
-    pickup_station = models.ForeignKey(
-        PickupStation, on_delete=models.SET_NULL, null=True, blank=True
-    )
+    pickup_station = models.ForeignKey(PickupStation, on_delete=models.SET_NULL, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
@@ -65,23 +75,17 @@ class DeliveryAddress(AbstractBaseModel):
 
 
 class Delivery(AbstractBaseModel):
-    customer = models.ForeignKey("users.User", on_delete=models.SET_NULL, null=True)
+    customer = models.ForeignKey("users.Customer", on_delete=models.SET_NULL, null=True)
     order = models.ForeignKey("pos.Order", on_delete=models.SET_NULL, null=True)
     cost = models.DecimalField(max_digits=100, decimal_places=2, default=0)
-    delivery_status = models.CharField(
-        max_length=255, choices=DELIVERY_STATUS, default="Pending Dispatch"
-    )
+    delivery_status = models.CharField(max_length=255, choices=DELIVERY_STATUS, default="Pending Dispatch")
     address = models.ForeignKey(DeliveryAddress, on_delete=models.SET_NULL, null=True)
-    delivery_partner = models.ForeignKey(
-        DeliveryPartner, on_delete=models.SET_NULL, null=True
-    )
-    delivery_type = models.CharField(
-        max_length=255, choices=DELIVERY_STYPE, default="Self Pickup"
-    )
+    delivery_partner = models.ForeignKey(DeliveryPartner, on_delete=models.SET_NULL, null=True)
+    delivery_type = models.CharField(max_length=255, choices=DELIVERY_STYPE, default="Self Pickup")
     driver = models.ForeignKey(DeliveryDriver, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return self.customer.username
+        return self.customer.user.username
 
     def delivery_address(self):
         if self.delivery_type == "Door Delivery":
