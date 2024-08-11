@@ -31,7 +31,6 @@ class CountySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-
 class TownSerializer(serializers.ModelSerializer):
     class Meta:
         model = Town
