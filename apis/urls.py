@@ -8,7 +8,14 @@ from apis.products.views import (
 from apis.orders.views import PlaceOrderAPIView
 from rest_framework_simplejwt.views import TokenVerifyView
 from apis.users.views import RegisterUserAPIView
-from apis.deliveries.views import CountyAPIView, TownAPIView, DeliveryAddressAPIView, PickupStationAPIView, DeliveryAddressDetailAPIView
+from apis.deliveries.views import (
+    CountyAPIView,
+    DeliveryAddressAPIView,
+    PickupStationAPIView,
+    DeliveryAddressDetailAPIView,
+    SubCountyAPIView,
+    WardAPIView
+)
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -30,11 +37,23 @@ urlpatterns = [
     path("place-order/", PlaceOrderAPIView.as_view(), name="place-order"),
     # Categories
     path("categories/", ProductCategoryAPIView.as_view(), name="categories"),
-
     # Deliveries
     path("counties/", CountyAPIView.as_view(), name="counties"),
-    path("towns/", TownAPIView.as_view(), name="towns"),
-    path("pickup-stations-list/", PickupStationAPIView.as_view(), name="pickup-stations-list"),
-    path("customer-addresses/", DeliveryAddressAPIView.as_view(), name="customer-addresses"),
-    path("customer-addresses/<int:pk>/", DeliveryAddressDetailAPIView.as_view(), name="customer-address-details"),
+    path("sub-counties/", SubCountyAPIView.as_view(), name="sub-counties"),
+    path("wards/", WardAPIView.as_view(), name="wards"),
+    path(
+        "pickup-stations-list/",
+        PickupStationAPIView.as_view(),
+        name="pickup-stations-list",
+    ),
+    path(
+        "customer-addresses/",
+        DeliveryAddressAPIView.as_view(),
+        name="customer-addresses",
+    ),
+    path(
+        "customer-addresses/<int:pk>/",
+        DeliveryAddressDetailAPIView.as_view(),
+        name="customer-address-details",
+    ),
 ]

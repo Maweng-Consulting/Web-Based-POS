@@ -1,40 +1,56 @@
 from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework import status, generics
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
+from apps.core.custom_pagination import NoPagination
 
-from apps.deliveries.models import DeliveryAddress, PickupStation, County, Town
-from apis.deliveries.serializers import DeliveryAddressSerializer, PickupStationSerializer, CountySerializer, TownSerializer
+from apps.deliveries.models import DeliveryAddress, PickupStation, County, Town, SubCounty, Ward
+from apis.deliveries.serializers import (
+    DeliveryAddressSerializer,
+    PickupStationSerializer,
+    CountySerializer,
+    TownSerializer,
+    SubCountySerializer,
+    WardSerializer
+)
+
 
 class CountyAPIView(generics.ListAPIView):
     queryset = County.objects.all()
     serializer_class = CountySerializer
+    pagination_class = NoPagination
 
-class TownAPIView(generics.ListAPIView):
-    queryset = Town.objects.all()
-    serializer_class = TownSerializer
 
-    def get_queryset(self):
-        county = self.request.query_params.get("county")
-        if county:
-            return self.queryset.filter(county_id=county)
-        return super().get_queryset()
+class SubCountyAPIView(generics.ListAPIView):
+    queryset = SubCounty.objects.all()
+    serializer_class = SubCountySerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["county"]
+
+    pagination_class = NoPagination
+
+class WardAPIView(generics.ListAPIView):
+    queryset = Ward.objects.all()
+    serializer_class = WardSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["sub_county"]
+
+    pagination_class = NoPagination
+
 
 class PickupStationAPIView(generics.ListAPIView):
     queryset = PickupStation.objects.all()
     serializer_class = PickupStationSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["ward"]
+
+    pagination_class = NoPagination
 
     def get_queryset(self):
-        county = self.request.query_params.get("county")
-        town = self.request.query_params.get("town")
-
-        if county and town:
-            return self.queryset.filter(county_id=county, town_id=town)
-        elif county:
-            return self.queryset.filter(county_id=county)
-        elif town:
-            return self.queryset.filter(town_id=town)
-        
+        station_type = self.request.query_params.get("station_type")
+        if station_type:
+            return self.queryset.filter(station_type=station_type)
         return super().get_queryset()
 
 
@@ -43,9 +59,8 @@ class DeliveryAddressAPIView(generics.ListCreateAPIView):
     serializer_class = DeliveryAddressSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        user = self.request.user
-        return self.queryset.filter(Q(customer__user=user) | Q(customer__user__username="walkin@gmail.com"))
+    pagination_class = NoPagination
+
 
 class DeliveryAddressDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = DeliveryAddress.objects.all()

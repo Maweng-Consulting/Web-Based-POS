@@ -4,11 +4,12 @@ from django.db import transaction
 from apps.users.models import User, Customer
 from apps.deliveries.models import DeliveryAddress
 
+
 class Command(BaseCommand):
     def handle(self, *args: Any, **options: Any) -> str | None:
         self.create_walk_in_customer()
         self.create_walkin_delivery_address()
-    
+
     def create_walk_in_customer(self):
         try:
             walkin_customer = User.objects.get(email="walkin@gmail.com")
@@ -22,19 +23,21 @@ class Command(BaseCommand):
                     username="walkin@gmail.com",
                     role="Customer",
                     gender="Male",
-                    phone_number="07123456789"
+                    phone_number="07123456789",
                 )
                 Customer.objects.create(
                     user=user,
                     name=f"{user.first_name} {user.last_name}",
                     address="0100",
                     city="Nairobi",
-                    country="Kenya"
+                    country="Kenya",
                 )
-                self.stdout.write(self.style.SUCCESS("Walkin Customer Successfully Created!!"))
+                self.stdout.write(
+                    self.style.SUCCESS("Walkin Customer Successfully Created!!")
+                )
         except Exception as e:
             raise e
-        
+
     def create_walkin_delivery_address(self):
         try:
             user = User.objects.get(email="walkin@gmail.com")
@@ -46,7 +49,9 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.SUCCESS("Address already exists!!"))
                 else:
                     DeliveryAddress.objects.create(customer=customer)
-                    self.stdout.write(self.style.SUCCESS("Address successfully created!!"))
+                    self.stdout.write(
+                        self.style.SUCCESS("Address successfully created!!")
+                    )
             elif not customer:
                 new_customer = self.create_walk_in_customer()
                 DeliveryAddress.objects.create(customer=new_customer)

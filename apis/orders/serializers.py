@@ -8,7 +8,7 @@ from apps.deliveries.models import Delivery, DeliveryStatusUpdate
 class PlaceOrderSerializer(serializers.Serializer):
     order_items = serializers.JSONField()
     total_cost = serializers.DecimalField(max_digits=100, decimal_places=2)
-    delivery_details =  serializers.JSONField()
+    delivery_details = serializers.JSONField()
 
     @transaction.atomic
     def save(self, **kwargs):
@@ -19,7 +19,7 @@ class PlaceOrderSerializer(serializers.Serializer):
         print(user.email)
 
         customer = Customer.objects.get(user=user)
-       
+
         order = Order.objects.create(
             order_source="Online",
             customer=customer,
@@ -27,15 +27,18 @@ class PlaceOrderSerializer(serializers.Serializer):
             status="Pending",
             order_type="Online",
             payment_method="Online",
-            served_by=user
+            served_by=user,
         )
 
-        order_items_list = [OrderItem(
-            order=order, 
-            user=user,
-            item_id=x["id"],
-            quantity=x["quantity"],
-            price=x["cost"]) for x in order_items
+        order_items_list = [
+            OrderItem(
+                order=order,
+                user=user,
+                item_id=x["id"],
+                quantity=x["quantity"],
+                price=x["cost"],
+            )
+            for x in order_items
         ]
         order_items = OrderItem.objects.bulk_create(order_items_list)
         for order_item in order_items:
@@ -48,13 +51,13 @@ class PlaceOrderSerializer(serializers.Serializer):
             cost=delivery_details["delivery_cost"],
             delivery_status="Pending Dispatch",
             address_id=delivery_details["address"],
-            delivery_type=delivery_details["delivery_type"]
+            delivery_type=delivery_details["delivery_type"],
         )
 
         DeliveryStatusUpdate.objects.create(
             delivery=delivery,
             previous_status="Initiated",
-            next_status="Pending Dispatch"
+            next_status="Pending Dispatch",
         )
 
         return {}
