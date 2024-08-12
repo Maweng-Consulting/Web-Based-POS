@@ -26,7 +26,7 @@ class SubCountyAPIView(generics.ListAPIView):
     queryset = SubCounty.objects.all()
     serializer_class = SubCountySerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["county"]
+    filterset_fields = ["county", "county__name"]
 
     pagination_class = NoPagination
 
@@ -34,7 +34,7 @@ class WardAPIView(generics.ListAPIView):
     queryset = Ward.objects.all()
     serializer_class = WardSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["sub_county"]
+    filterset_fields = ["sub_county", "sub_county__name"]
 
     pagination_class = NoPagination
 
@@ -43,7 +43,7 @@ class PickupStationAPIView(generics.ListAPIView):
     queryset = PickupStation.objects.all()
     serializer_class = PickupStationSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["ward"]
+    filterset_fields = ["ward", "ward__name"]
 
     pagination_class = NoPagination
 
