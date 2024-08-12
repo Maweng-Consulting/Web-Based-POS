@@ -140,7 +140,7 @@ def deliveries(request):
         "delivery_types": DELIVERY_TYPE_CHOICES,
         "delivery_partners": delivery_partners,
         "delivery_addresses": delivery_addresses,
-        "drivers": drivers
+        "drivers": drivers,
     }
     return render(request, "deliveries/deliveries.html", context)
 

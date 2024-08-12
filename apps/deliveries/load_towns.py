@@ -1,12 +1,41 @@
 from apps.deliveries.models import County, Town
 
 towns = [
-    {"Nairobi": ["Nairobi", "Pipeline", "Westlands", "Kayole", "Kariobangi", "Eastleigh"]},
+    {
+        "Nairobi": [
+            "Nairobi",
+            "Pipeline",
+            "Westlands",
+            "Kayole",
+            "Kariobangi",
+            "Eastleigh",
+        ]
+    },
     {"Mombasa": ["Mombasa"]},
     {"Kisumu": ["Kisumu"]},
     {"Nakuru": ["Nakuru", "Naivasha", "Gilgil"]},
-    {"Kiambu": ["Thika", "Kiambu", "Ruiru", "Juja", "Kahawa Sukari", "Limuru", "Githunguri"]},
-    {"Machakos": ["Machakos", "Mwala", "Kangundo", "Masinga", "Matuu", "Kithimani", "Tala"]},
+    {
+        "Kiambu": [
+            "Thika",
+            "Kiambu",
+            "Ruiru",
+            "Juja",
+            "Kahawa Sukari",
+            "Limuru",
+            "Githunguri",
+        ]
+    },
+    {
+        "Machakos": [
+            "Machakos",
+            "Mwala",
+            "Kangundo",
+            "Masinga",
+            "Matuu",
+            "Kithimani",
+            "Tala",
+        ]
+    },
     {"Nyeri": ["Nyeri", "Karatina", "Othaya"]},
     {"Meru": ["Meru", "Maua", "Timau", "Nkubu"]},
     {"Kakamega": ["Kakamega", "Mumias", "Lugari", "Lurambi"]},
@@ -50,7 +79,7 @@ towns = [
     {"Migori": ["Migori", "Awendo", "Rongo"]},
     {"Kisumu": ["Kisumu", "Ahero", "Maseno"]},
     {"Nyamira": ["Nyamira", "Keroka", "Manga"]},
-    {"Taita Taveta": ["Voi", "Wundanyi", "Taveta"]}
+    {"Taita Taveta": ["Voi", "Wundanyi", "Taveta"]},
 ]
 
 
@@ -62,5 +91,6 @@ def load_towns():
         if county:
             for x in county_towns:
                 Town.objects.create(county=county, name=x)
-        
-#load_towns()
+
+
+# load_towns()
