@@ -34,3 +34,17 @@ class SupplyInvoiceLog(AbstractBaseModel):
     invoice = models.ForeignKey(SupplyInvoice, on_delete=models.SET_NULL, null=True)
     actioned_by = models.ForeignKey("users.User", on_delete=models.SET_NULL, null=True)
     action = models.CharField(max_length=255)
+
+PAYMENT_TYPES = (
+    ("Mpesa", "Mpesa"),
+    ("Paystack", "Paystack"),
+)
+
+class OrderPayment(AbstractBaseModel):
+    order = models.OneToOneField("pos.Order", on_delete=models.CASCADE)
+    amount_expected = models.DecimalField(max_digits=100, decimal_places=2, default=0)
+    payment_type = models.CharField(max_length=255, choices=PAYMENT_TYPES)
+    checkout_id = models.CharField(max_length=255, null=True)
+    payment_reference = models.CharField(max_length=255, null=True)
+    paid = models.BooleanField(default=False)
+    

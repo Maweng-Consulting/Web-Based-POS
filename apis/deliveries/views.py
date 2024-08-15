@@ -5,6 +5,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
 from apps.core.custom_pagination import NoPagination
 
+from apps.users.models import User, Customer
+
 from apps.deliveries.models import DeliveryAddress, PickupStation, County, Town, SubCounty, Ward
 from apis.deliveries.serializers import (
     DeliveryAddressSerializer,
@@ -55,12 +57,28 @@ class PickupStationAPIView(generics.ListAPIView):
 
 
 class DeliveryAddressAPIView(generics.ListCreateAPIView):
-    queryset = DeliveryAddress.objects.all()
+    queryset = DeliveryAddress.objects.all().order_by("-created")
     serializer_class = DeliveryAddressSerializer
     permission_classes = [IsAuthenticated]
 
     pagination_class = NoPagination
 
+    def get_queryset(self):
+        user = self.request.user
+        return self.queryset.filter(customer__user=user)
+    
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        serializer = self.serializer_class(data=data)
+        if serializer.is_valid(raise_exception=True):
+            customer = Customer.objects.filter(user=request.user).first()
+            address = serializer.save()
+            address.customer = customer
+            address.save()
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 
 class DeliveryAddressDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = DeliveryAddress.objects.all()

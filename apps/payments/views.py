@@ -5,11 +5,28 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import redirect, render
 
-from apps.payments.models import SupplyInvoice, SupplyInvoiceLog
+from apps.payments.models import SupplyInvoice, SupplyInvoiceLog, OrderPayment
 from apps.suppliers.models import Supplier
 
 
 # Create your views here.
+@login_required(login_url="/users/login/")
+def payments(request):
+    payments = OrderPayment.objects.all()
+    if request.method == "POST":
+        search_text = request.POST.get("search_text")
+        payments = OrderPayment.objects.filter(Q(payment_reference=search_text))
+
+    paginator = Paginator(payments, 12)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "page_obj": page_obj
+    }
+    return render(request, "payments/payments.html", context)
+
+
 @login_required(login_url="/users/login/")
 def invoices(request):
     invoices = SupplyInvoice.objects.all().order_by("-created")
@@ -48,7 +65,7 @@ def new_invoice(request):
             status="Review",
         )
 
-        invoice_log = SupplyInvoiceLog.objects.create(
+        SupplyInvoiceLog.objects.create(
             invoice=invoice, actioned_by=user, action="New invoice created"
         )
 
@@ -84,7 +101,7 @@ def edit_invoice(request):
 
         new_invoice_status = invoice.status
 
-        invoice_log = SupplyInvoiceLog.objects.create(
+        SupplyInvoiceLog.objects.create(
             invoice=invoice,
             actioned_by=user,
             action=f"Invoice status changed from {initial_invoice_status} to {new_invoice_status}",
@@ -112,7 +129,7 @@ def pay_invoice(request):
             invoice.save()
 
         new_invoice_status = invoice.status
-        invoice_log = SupplyInvoiceLog.objects.create(
+        SupplyInvoiceLog.objects.create(
             invoice=invoice,
             actioned_by=user,
             action=f"Invoice status changed from {initial_invoice_status} to {new_invoice_status}",

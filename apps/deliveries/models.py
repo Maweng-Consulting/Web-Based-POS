@@ -1,3 +1,4 @@
+from typing import Iterable
 from django.db import models
 from apps.core.models import AbstractBaseModel
 
@@ -107,7 +108,7 @@ class DeliveryAddress(AbstractBaseModel):
     name = models.CharField(max_length=255, null=True)
     phone_number = models.CharField(max_length=255, null=True)
     id_number = models.CharField(max_length=255, null=True)
-    customer = models.ForeignKey("users.Customer", on_delete=models.CASCADE)
+    customer = models.ForeignKey("users.Customer", on_delete=models.CASCADE, null=True)
     pickup_station = models.ForeignKey(PickupStation, on_delete=models.SET_NULL, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     town = models.CharField(max_length=255, null=True)
