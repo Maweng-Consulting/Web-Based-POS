@@ -11,6 +11,9 @@ from apps.deliveries.models import (
 
 class DeliveryAddressSerializer(serializers.ModelSerializer):
     pick_at = serializers.SerializerMethodField()
+    county_name = serializers.SerializerMethodField()
+    sub_county_name = serializers.SerializerMethodField()
+    ward_name = serializers.SerializerMethodField()
 
     class Meta:
         model = DeliveryAddress
@@ -18,6 +21,16 @@ class DeliveryAddressSerializer(serializers.ModelSerializer):
 
     def get_pick_at(self, obj):
         return obj.pickup_station.name if obj.pickup_station else obj.description
+    
+    def get_county_name(self, obj):
+        return obj.county.name if obj.county else None
+    
+    def get_sub_county_name(self, obj):
+        return obj.sub_county.name if obj.sub_county else None
+    
+    def get_ward_name(self, obj):
+        return obj.ward.name if obj.ward else None
+
 
 
 class PickupStationSerializer(serializers.ModelSerializer):
