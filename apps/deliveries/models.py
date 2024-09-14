@@ -125,16 +125,10 @@ class Delivery(AbstractBaseModel):
     customer = models.ForeignKey("users.Customer", on_delete=models.SET_NULL, null=True)
     order = models.ForeignKey("pos.Order", on_delete=models.SET_NULL, null=True)
     cost = models.DecimalField(max_digits=100, decimal_places=2, default=0)
-    delivery_status = models.CharField(
-        max_length=255, choices=DELIVERY_STATUS, default="Pending Dispatch"
-    )
+    delivery_status = models.CharField(max_length=255, choices=DELIVERY_STATUS, default="Pending Dispatch")
     address = models.ForeignKey(DeliveryAddress, on_delete=models.SET_NULL, null=True)
-    delivery_partner = models.ForeignKey(
-        DeliveryPartner, on_delete=models.SET_NULL, null=True
-    )
-    delivery_type = models.CharField(
-        max_length=255, choices=DELIVERY_STYPE, default="Self Pickup"
-    )
+    delivery_partner = models.ForeignKey(DeliveryPartner, on_delete=models.SET_NULL, null=True)
+    delivery_type = models.CharField(max_length=255, choices=DELIVERY_STYPE, default="Self Pickup")
     driver = models.ForeignKey(DeliveryDriver, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):

@@ -21,3 +21,5 @@ services:
       - SITE_EMAIL=info@ticketing.com
       - EMAIL_HOST_PASSWORD=mailhog
       - EMAIL_HOST_USER=mailhog
+
+  

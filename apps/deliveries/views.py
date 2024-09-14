@@ -20,7 +20,6 @@ DELIVERY_STATUS_CHOICES = [
 ]
 DELIVERY_TYPE_CHOICES = ["Self Pickup", "Door Delivery", "Pickup Station"]
 
-
 # Create your views here.
 def home(request):
     stations_count = PickupStation.objects.count()
@@ -153,7 +152,7 @@ def new_delivery(request):
         order = Order.objects.get(id=order_id)
 
         delivery = Delivery.objects.create(
-            customer=order.customer.user,
+            customer=order.customer,
             order=order,
             cost=cost,
             delivery_type=delivery_type,
