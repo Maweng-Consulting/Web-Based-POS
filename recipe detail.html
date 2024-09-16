@@ -1,155 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Detail Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
-        }
-        .recipe-header {
-            text-align: center;
-            padding: 20px 0;
-        }
-        .recipe-image {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-        .recipe-description {
-            margin: 20px 0;
-            padding: 20px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .recipe-details {
-            margin-bottom: 20px;
-            padding: 20px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .rating, .share {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-        }
-        .steps, .ingredients {
-            padding: 10px;
-            margin: 20px 0;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .comments-section {
-            padding: 20px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .comment-form {
-            margin-top: 20px;
-        }
-        .comment-form textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        .comment-form button {
-            padding: 10px 20px;
-            background: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .comment-form button:hover {
-            background: #218838;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python to Django Advanced Course</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    /* Hero Section */
+    .hero {
+      background-image: url('https://via.placeholder.com/1920x600'); /* Replace with your image URL */
+      background-size: cover;
+      background-position: center;
+      height: 600px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    .hero button {
+      background-color: #2a9d8f;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      border-radius: 5px;
+    }
+
+    .hero button:hover {
+      background-color: #21867a;
+    }
+
+    .container {
+      width: 80%;
+      margin: auto;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-top: -50px;
+      position: relative;
+      z-index: 2;
+    }
+
+    h1, h2 {
+      color: #333;
+    }
+
+    .curriculum-section {
+      margin-bottom: 50px;
+    }
+
+    .icon {
+      margin-right: 10px;
+      color: #2a9d8f;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      margin-bottom: 10px;
+      padding-left: 25px;
+      position: relative;
+    }
+
+    ul li:before {
+      content: "\f054";
+      font-family: "FontAwesome";
+      position: absolute;
+      left: 0;
+      color: #2a9d8f;
+    }
+
+    .enroll-form {
+      background: #f9f9f9;
+      padding: 20px;
+      margin-top: 30px;
+      border: 1px solid #ccc;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+    }
+
+    button {
+      background-color: #2a9d8f;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #21867a;
+    }
+
+    footer {
+      margin-top: 50px;
+      text-align: center;
+      padding: 20px;
+      background-color: #333;
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        width: 95%;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="recipe-header">
-            <h1>Delicious Chocolate Cake</h1>
-        </div>
+<!-- Hero Section -->
+<div class="hero">
+  <h1>Python to Django Advanced Course</h1>
+  <p>Learn Python from the ground up, and advance to building modern web applications with Django and Django REST Framework.</p>
+  <button onclick="document.getElementById('enroll').scrollIntoView()">Enroll Now</button>
+</div>
 
-        <div class="recipe-description">
-            <img src="https://via.placeholder.com/800x400.png?text=Chocolate+Cake" alt="Chocolate Cake" class="recipe-image">
-            <p>This chocolate cake is rich, moist, and decadent, perfect for any special occasion. It's easy to make and sure to impress your guests!</p>
-        </div>
+<div class="container">
+  <h2><i class="fas fa-graduation-cap icon"></i> Curriculum Overview</h2>
+  <div class="curriculum-section">
+    <h3>Month 1: Python Basics</h3>
+    
+    <ul>
+      <li>Introduction to Python</li>
+      <li>Data Structures and Error Handling</li>
+      <li>Final Project: Basic Console Application</li>
+    </ul>
+  </div>
 
-        <div class="recipe-details">
-            <div class="rating">
-                <div class="rating-value">
-                    <strong>Rating:</strong> 4.5/5
-                </div>
-                <div class="share">
-                    <a href="#">Share this recipe</a>
-                </div>
-            </div>
-        </div>
+  <div class="curriculum-section">
+    <h3>Month 2: Web Development with HTML, CSS, and JavaScript</h3>
+    <ul>
+      <li>HTML Fundamentals</li>
+      <li>CSS Styling and Layout</li>
+      <li>JavaScript Basics</li>
+      <li>Final Project: Build an Interactive Portfolio</li>
+    </ul>
+  </div>
 
-        <div class="ingredients">
-            <h2>Ingredients</h2>
-            <ul>
-                <li>1 3/4 cups flour</li>
-                <li>1 1/2 cups sugar</li>
-                <li>3/4 cup cocoa powder</li>
-                <li>1 1/2 tsp baking powder</li>
-                <li>1 1/2 tsp baking soda</li>
-                <li>1 tsp salt</li>
-                <li>2 eggs</li>
-                <li>1 cup milk</li>
-                <li>1/2 cup vegetable oil</li>
-                <li>2 tsp vanilla extract</li>
-                <li>1 cup boiling water</li>
-            </ul>
-        </div>
+  <div class="curriculum-section">
+    <h3>Month 3: Django Basics</h3>
+    <ul>
+      <li>Django Setup and Fundamentals</li>
+      <li>Models, Views, and Templates</li>
+      <li>Forms and Validation</li>
+      <li>Final Project: Simple Blog Application</li>
+    </ul>
+  </div>
 
-        <div class="steps">
-            <h2>Steps</h2>
-            <ol>
-                <li>Preheat your oven to 350°F (175°C). Grease and flour two 9-inch round baking pans.</li>
-                <li>In a large bowl, stir together the flour, sugar, cocoa, baking powder, baking soda, and salt.</li>
-                <li>Add the eggs, milk, oil, and vanilla. Mix for 2 minutes on medium speed.</li>
-                <li>Stir in the boiling water (batter will be thin). Pour batter into prepared pans.</li>
-                <li>Bake for 30 to 35 minutes in the preheated oven, until a toothpick inserted into the center comes out clean.</li>
-                <li>Cool in the pans for 10 minutes, then remove to a wire rack to cool completely.</li>
-                <li>Frost and enjoy your cake!</li>
-            </ol>
-        </div>
+  <div class="curriculum-section">
+    <h3>Month 4: Django REST Framework</h3>
+    <ul>
+      <li>Building APIs with Django REST Framework</li>
+      <li>CRUD Operations and Authentication</li>
+      <li>Advanced API Features</li>
+      <li>Final Project: RESTful API for Blog</li>
+    </ul>
+  </div>
 
-        <div class="comments-section">
-            <h2>Comments</h2>
-            <div class="comments">
-                <p><strong>Alice:</strong> This cake was amazing! My family loved it.</p>
-                <p><strong>Bob:</strong> Easy to make and super tasty.</p>
-            </div>
-            <div class="comment-form">
-                <h3>Leave a Comment</h3>
-                <textarea name="comment" id="comment" rows="4" placeholder="Write your comment here..."></textarea>
-                <button type="submit">Submit</button>
-            </div>
-        </div>
+  <div class="curriculum-section">
+    <h3>Month 5: Django REST Framework with ReactJS</h3>
+    <ul>
+      <li>Introduction to ReactJS</li>
+      <li>Connecting Django and React</li>
+      <li>Authentication with React and DRF</li>
+      <li>Final Project: Full-stack Application</li>
+    </ul>
+  </div>
 
+  <div class="curriculum-section">
+    <h3>Month 6: Advanced Topics, Integrations, and Deployment</h3>
+    <ul>
+      <li>Docker and Containerization</li>
+      <li>Third-party API Integrations</li>
+      <li>Deployment and Production Setup</li>
+      <li>Final Project: Complete Full-stack Application</li>
+    </ul>
+  </div>
+
+  <h2 id="enroll"><i class="fas fa-user-plus icon"></i> Enroll Now</h2>
+  <form class="enroll-form" action="your-enrollment-endpoint" method="POST">
+    <div class="form-group">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" required>
     </div>
+    
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <input type="text" id="phone" name="phone" required>
+    </div>
+
+    <div class="form-group">
+      <label for="experience">Programming Experience</label>
+      <select id="experience" name="experience" required>
+        <option value="" disabled selected>Select your experience level</option>
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="why">Why do you want to join this course?</label>
+      <textarea id="why" name="why" rows="5" required></textarea>
+    </div>
+
+    <button type="submit">Enroll Now</button>
+  </form>
+</div>
+
+<footer>
+  &copy; 2024 Python to Django Advanced Course. All Rights Reserved.
+</footer>
 
 </body>
 </html>
