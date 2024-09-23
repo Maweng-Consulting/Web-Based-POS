@@ -1,7 +1,5 @@
 django
 djangorestframework
-pdfkit
-reportlab
 gunicorn
 djangorestframework-simplejwt
 django-cors-headers
